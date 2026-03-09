@@ -70,17 +70,17 @@ api.interceptors.response.use(
       if (!refreshToken) throw new Error("No refresh token");
 
       const { data } = await axios.post<{
-        accessToken: string;
-        refreshToken: string;
+        success: boolean;
+        data: { accessToken: string; refreshToken: string };
       }>(`${BASE_URL}/api/auth/refresh`, { refreshToken });
 
-      useAuthStore.getState().setAccessToken(data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
+      useAuthStore.getState().setAccessToken(data.data.accessToken);
+      localStorage.setItem("refreshToken", data.data.refreshToken);
 
-      processQueue(null, data.accessToken);
+      processQueue(null, data.data.accessToken);
 
       if (originalRequest.headers) {
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+        originalRequest.headers.Authorization = `Bearer ${data.data.accessToken}`;
       }
       return api(originalRequest);
     } catch (refreshError) {
