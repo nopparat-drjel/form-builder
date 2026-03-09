@@ -1,0 +1,30 @@
+name = "hr-form-backend"
+main = "src/index.ts"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Set secrets via: wrangler secret put RESEND_API_KEY
+[vars]
+NOTIFY_EMAIL = "nopparat@doctorjel.co.th"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hr_form_db"
+database_id = "00731074-944f-49a6-9d64-a6e0b0af861e"
+
+# R2 binding — uncomment after enabling R2 in the Cloudflare Dashboard
+# [[r2_buckets]]
+# binding = "UPLOADS"
+# bucket_name = "hr-form-uploads-staging"
+
+[env.production]
+name = "hr-form-backend-prod"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "hr_form_db_prod"
+database_id = "37966ebd-850b-48ff-a35b-64a931464956"
+
+# [[env.production.r2_buckets]]
+# binding = "UPLOADS"
+# bucket_name = "hr-form-uploads-prod"

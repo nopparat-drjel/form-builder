@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.output/
+.wrangler/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.dev.vars
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/settings.json
+.idea/
+
+# Cloudflare
+wrangler-state/
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.npmrc-build-approve
+
+# Compiled output from tsc (not Vite)
+apps/frontend/src/**/*.js
+apps/frontend/src/**/*.js.map
+apps/frontend/src/**/*.d.ts
+apps/frontend/src/**/*.d.ts.map
+apps/worker/src/**/*.js
+apps/worker/src/**/*.js.map
+apps/worker/src/**/*.d.ts
+apps/frontend/vite.config.d.ts
+apps/frontend/vite.config.js

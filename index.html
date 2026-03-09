@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR FormKit v4</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f5f5;--sd:#cecece;--sl:#ffffff;--g1:#1a4d24;--g2:#2d7a3a;--g3:#48b356;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Prompt',sans-serif;color:#2d3748;}
+input,textarea,select{font-family:'Sarabun',sans-serif!important;color:#374151;}
+.neu{background:var(--bg);border-radius:16px;box-shadow:6px 6px 14px var(--sd),-6px -6px 14px var(--sl);}
+.neu-sm{background:var(--bg);border-radius:12px;box-shadow:4px 4px 9px var(--sd),-4px -4px 9px var(--sl);}
+.neu-xs{background:var(--bg);border-radius:8px;box-shadow:3px 3px 6px var(--sd),-3px -3px 6px var(--sl);}
+.neu-in{background:var(--bg);border-radius:10px;box-shadow:inset 3px 3px 7px var(--sd),inset -3px -3px 7px var(--sl);}
+.neu-in-sm{background:var(--bg);border-radius:8px;box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);}
+.ni{background:var(--bg);border-radius:10px;box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);border:none;outline:none;width:100%;padding:9px 13px;font-size:13px;transition:box-shadow .2s;}
+.ni:focus{box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl),0 0 0 2px rgba(45,122,58,.25);}
+.nb{background:linear-gradient(145deg,#fafafa,#ebebeb);border-radius:10px;box-shadow:3px 3px 7px var(--sd),-3px -3px 7px var(--sl);border:none;cursor:pointer;font-family:'Prompt',sans-serif;transition:all .15s;}
+.nb:hover{box-shadow:4px 4px 10px var(--sd),-4px -4px 10px var(--sl);}
+.nb:active{box-shadow:inset 2px 2px 5px var(--sd),inset -2px -2px 5px var(--sl);}
+.nbg{background:linear-gradient(135deg,var(--g1),var(--g3));border-radius:12px;box-shadow:4px 4px 10px rgba(45,122,58,.4),-2px -2px 6px rgba(255,255,255,.15);border:none;cursor:pointer;color:#fff;font-family:'Prompt',sans-serif;font-weight:600;transition:all .15s;}
+.nbg:hover{box-shadow:5px 5px 13px rgba(45,122,58,.5);transform:translateY(-1px);}
+.nbg:active{box-shadow:inset 2px 2px 6px rgba(0,0,0,.2);transform:translateY(0);}
+.nbd{background:linear-gradient(135deg,#c53030,#e53e3e);border-radius:10px;box-shadow:3px 3px 7px rgba(197,48,48,.3);border:none;cursor:pointer;color:#fff;font-family:'Prompt',sans-serif;transition:all .15s;}
+.sb{background:linear-gradient(175deg,#142e18 0%,#1a4d24 50%,#2d7a3a 100%);}
+.mi{font-family:'Material Symbols Outlined';font-weight:400;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;user-select:none;vertical-align:middle;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#c8c8c8;border-radius:3px;}
+.tbl-in{background:transparent;border:none;outline:none;width:100%;padding:3px 4px;font-size:12px;font-family:'Sarabun',sans-serif;}
+.tbl-in:focus{background:rgba(45,122,58,.06);border-radius:3px;}
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500;}
+.bfull{flex:0 0 100%;min-width:0;}
+.bhalf{flex:0 0 calc(50% - 6px);min-width:0;}
+.bthird{flex:0 0 calc(33.333% - 8px);min-width:0;}
+.stat-bar{display:flex;border-top:2px solid rgba(45,122,58,.15);margin-top:4px;}
+.stat-col{flex:1;padding:14px 16px;text-align:center;border-right:1px solid #ebebeb;}
+.stat-col:last-child{border-right:none;}
+.resp-row{display:flex;align-items:center;gap:12px;padding:11px 20px;border-top:1px solid #f0f0f0;cursor:pointer;transition:background .15s;}
+.resp-row:hover{background:rgba(45,122,58,.04);}
+@media print{.no-print{display:none!important;}body{background:white!important;}.neu,.neu-sm{box-shadow:none!important;border:1px solid #eee!important;}.pagebreak-block{page-break-after:always;}@page{size:A4;margin:15mm;}}
+.mc{background:#f0f0f0;border-radius:16px;box-shadow:0 28px 72px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.7);}
+.mc-sm{background:#f0f0f0;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.6);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useRef,useEffect}=React;
+const I=({n,s=20,c='',style})=><span className={`mi ${c}`} style={{fontSize:s,...(style||{})}}>{n}</span>;
+
+const BT=[
+  {type:'section', icon:'title',                label:'หัวข้อส่วน',        desc:'แบ่งกลุ่มช่องกรอก'},
+  {type:'text',    icon:'text_fields',           label:'กล่องข้อความ',      desc:'ชื่อ, ที่อยู่, อีเมล'},
+  {type:'textarea',icon:'notes',                 label:'ข้อความยาว',        desc:'แนะนำตัว, บรรยาย'},
+  {type:'number',  icon:'pin',                   label:'ตัวเลข',            desc:'อายุ, เงินเดือน, ส่วนสูง'},
+  {type:'date',    icon:'calendar_today',        label:'วันที่',            desc:'วันเกิด, วันหมดอายุ'},
+  {type:'radio',   icon:'radio_button_checked',  label:'เลือกหนึ่งตัวเลือก',desc:'เพศ, สถานภาพ'},
+  {type:'checkbox',icon:'check_box',             label:'เลือกหลายตัวเลือก', desc:'ทักษะ, ความสามารถ'},
+  {type:'table',   icon:'table_chart',           label:'ตารางข้อมูล',       desc:'การศึกษา, ประสบการณ์'},
+  {type:'matrix',  icon:'grid_on',               label:'ตารางประเมิน',      desc:'ความสามารถทางภาษา'},
+  {type:'photo',   icon:'photo_camera',          label:'อัปโหลดรูป/ไฟล์',  desc:'รูปถ่าย, เอกสารแนบ'},
+  {type:'pagebreak',icon:'horizontal_rule',       label:'แบ่งหน้า A4',      desc:'ขึ้นหน้าใหม่เมื่อพิมพ์'},
+];
+
+const DEF_BLOCKS=[
+  {id:'b1', type:'photo',    colSpan:'full',  label:'รูปถ่ายผู้สมัคร',required:false,accept:'image/*',maxSizeMB:2},
+  {id:'b2', type:'section',  colSpan:'full',  label:'ข้อมูลส่วนตัว (Personal Information)'},
+  {id:'b3', type:'text',     colSpan:'full',  label:'ชื่อ-นามสกุล (Full Name)',required:true,placeholder:'ระบุชื่อ-นามสกุล',inputType:'text'},
+  {id:'b4', type:'text',     colSpan:'half',  label:'ตำแหน่งที่ต้องการ',required:true,placeholder:'ระบุตำแหน่งงาน',inputType:'text'},
+  {id:'b5', type:'number',   colSpan:'half',  label:'เงินเดือนที่ต้องการ',required:false,placeholder:'จำนวนเงิน',unit:'บาท/เดือน'},
+  {id:'b6', type:'text',     colSpan:'full',  label:'ที่อยู่ปัจจุบัน',required:true,placeholder:'บ้านเลขที่, ถนน, แขวง/ตำบล, อำเภอ/เขต, จังหวัด, รหัสไปรษณีย์',inputType:'text'},
+  {id:'b7', type:'text',     colSpan:'half',  label:'เบอร์โทรศัพท์ (Mobile)',required:true,placeholder:'08X-XXX-XXXX',inputType:'tel'},
+  {id:'b8', type:'text',     colSpan:'half',  label:'อีเมล (E-mail)',required:true,placeholder:'example@email.com',inputType:'email'},
+  {id:'b9', type:'date',     colSpan:'third', label:'วัน/เดือน/ปีเกิด',required:true},
+  {id:'b10',type:'radio',    colSpan:'third', label:'เพศ (Sex)',required:true,options:['ชาย (Male)','หญิง (Female)'],layout:'horizontal'},
+  {id:'b11',type:'radio',    colSpan:'third', label:'สถานภาพ (Marital Status)',required:false,options:['โสด','แต่งงาน','หม้าย','แยกกัน'],layout:'horizontal'},
+  {id:'b12',type:'section',  colSpan:'full',  label:'การศึกษา (Education)'},
+  {id:'b13',type:'table',    colSpan:'full',  label:'ประวัติการศึกษา',required:false,columns:['ระดับการศึกษา','สถาบัน','สาขาวิชา','ปีที่จบ'],rows:['มัธยมปลาย','ปวช./ปวส.','ปริญญาตรี','สูงกว่าปริญญาตรี'],canAddRows:false},
+  {id:'b14',type:'section',  colSpan:'full',  label:'ประสบการณ์ทำงาน (Work Experience)'},
+  {id:'b15',type:'table',    colSpan:'full',  label:'ประวัติการทำงาน (เรียงจากล่าสุด)',columns:['บริษัท/องค์กร','ตำแหน่ง','เริ่ม','ถึง','เหตุที่ออก'],rows:['','','',''],canAddRows:true},
+  {id:'b16',type:'section',  colSpan:'full',  label:'ความสามารถทางภาษา (Language Ability)'},
+  {id:'b17',type:'matrix',   colSpan:'full',  label:'ระดับความสามารถทางภาษา',rows:['ภาษาไทย','ภาษาอังกฤษ','ภาษาญี่ปุ่น','อื่นๆ'],groups:[{label:'พูด',levels:['ดี','ปานกลาง','พอใช้']},{label:'อ่าน',levels:['ดี','ปานกลาง','พอใช้']},{label:'เขียน',levels:['ดี','ปานกลาง','พอใช้']}]},
+  {id:'b18',type:'section',  colSpan:'full',  label:'ความสามารถพิเศษ (Special Ability)'},
+  {id:'b19',type:'checkbox', colSpan:'full',  label:'ทักษะคอมพิวเตอร์',options:['Microsoft Word','Microsoft Excel','PowerPoint','Adobe Photoshop','อื่นๆ']},
+  {id:'b20',type:'textarea', colSpan:'full',  label:'แนะนำตัวเอง (Self Introduction)',placeholder:'กรุณาแนะนำตัวท่านเอง เพื่อให้บริษัทรู้จักตัวท่านดีขึ้น',maxLength:500,rows:4},
+];
+
+const SAMPLE_RESP=[
+  {id:'r1',formId:'f1',name:'สมชาย รักงาน',  position:'Software Developer',at:'8 มี.ค. 09:30',avatar:'👨',status:'new',        starred:true, salary:'45,000',tel:'081-234-5678',submittedAt:'08 มี.ค. 2568, 09:30',approvedAt:null},
+  {id:'r2',formId:'f1',name:'สุดา มั่นใจ',    position:'UX Designer',       at:'8 มี.ค. 11:15',avatar:'👩',status:'reviewed',   starred:false,salary:'40,000',tel:'082-345-6789',submittedAt:'08 มี.ค. 2568, 11:15',approvedAt:'08 มี.ค. 2568, 14:30'},
+  {id:'r3',formId:'f1',name:'ประยุทธ์ ขยันดี',position:'Project Manager',   at:'7 มี.ค. 14:20',avatar:'👨',status:'new',        starred:false,salary:'60,000',tel:'083-456-7890',submittedAt:'07 มี.ค. 2568, 14:20',approvedAt:null},
+  {id:'r4',formId:'f1',name:'มณีรัตน์ ใจดี',  position:'HR Specialist',     at:'7 มี.ค. 16:45',avatar:'👩',status:'reviewed',   starred:true, salary:'38,000',tel:'084-567-8901',submittedAt:'07 มี.ค. 2568, 16:45',approvedAt:'08 มี.ค. 2568, 10:15'},
+  {id:'r5',formId:'f1',name:'วีรชน กล้าหาญ', position:'Software Developer', at:'6 มี.ค. 10:00',avatar:'👨',status:'shortlisted',starred:true, salary:'50,000',tel:'085-678-9012',submittedAt:'06 มี.ค. 2568, 10:00',approvedAt:'07 มี.ค. 2568, 09:45'},
+  {id:'r6',formId:'f2',name:'นภาพร สดใส',    position:'Graphic Designer',   at:'5 มี.ค. 13:00',avatar:'👩',status:'new',        starred:false,salary:'35,000',tel:'086-789-0123',submittedAt:'05 มี.ค. 2568, 13:00',approvedAt:null},
+  {id:'r7',formId:'f2',name:'ธนาธร ใจกล้า',  position:'Data Analyst',       at:'4 มี.ค. 09:00',avatar:'👨',status:'reviewed',   starred:false,salary:'42,000',tel:'087-890-1234',submittedAt:'04 มี.ค. 2568, 09:00',approvedAt:'05 มี.ค. 2568, 16:20'},
+];
+
+const INIT_FORMS=[
+  {id:'f1',title:'ใบสมัครงาน 2024 (มาตรฐาน)',desc:'กรอกข้อมูลด้วยตัวท่านเอง · To be completed in own handwriting',active:true,logo:{dataUrl:'',position:'left',inline:true,titleAlign:'left'},blocks:JSON.parse(JSON.stringify(DEF_BLOCKS)),createdAt:'01/03/2568',updatedAt:'08/03/2568',shareCount:3,lastSharedAt:'07/03/2568 14:22'},
+  {id:'f2',title:'แบบประเมิน IT Department',desc:'สำหรับตำแหน่ง Developer & Designer',active:true,logo:{dataUrl:'',position:'left',inline:true,titleAlign:'left'},blocks:JSON.parse(JSON.stringify(DEF_BLOCKS.slice(0,14))),createdAt:'03/03/2568',updatedAt:'05/03/2568',shareCount:1,lastSharedAt:'05/03/2568 09:10'},
+];
+
+/* ── Mini Components ── */
+const Toggle=({v,on})=>(
+  <button onClick={e=>{e.stopPropagation();on(!v);}} style={{width:44,height:24,background:v?'linear-gradient(135deg,#2d7a3a,#48b356)':'#ddd',borderRadius:12,border:'none',cursor:'pointer',transition:'background .2s',position:'relative',flexShrink:0,boxShadow:v?'inset 1px 1px 3px rgba(0,0,0,.2)':'inset 1px 1px 3px rgba(0,0,0,.1)'}}>
+    <div style={{position:'absolute',width:18,height:18,background:'white',borderRadius:'50%',top:3,left:v?23:3,transition:'left .2s',boxShadow:'1px 1px 3px rgba(0,0,0,.2)'}}/>
+  </button>
+);
+const SL=({c})=><label style={{fontSize:10,fontWeight:700,color:'#9ca3af',textTransform:'uppercase',letterSpacing:'.06em',display:'block',marginBottom:5}}>{c}</label>;
+const NI=({value,onChange,placeholder,type='text'})=>(
+  <input className="ni" type={type} value={value??''} onChange={e=>onChange(e.target.value)} placeholder={placeholder??''} />
+);
+const NS=({value,onChange,opts})=>(
+  <select className="ni" value={value??''} onChange={e=>onChange(e.target.value)} style={{cursor:'pointer'}}>
+    {opts.map(o=><option key={o.v??o} value={o.v??o}>{o.l??o}</option>)}
+  </select>
+);
+const Chip=({label,icon,active,onClick})=>(
+  <button onClick={onClick} style={{display:'flex',alignItems:'center',gap:5,padding:'7px 14px',borderRadius:20,border:'none',cursor:'pointer',fontFamily:"'Prompt',sans-serif",fontSize:12,fontWeight:500,transition:'all .15s',
+    background:active?'linear-gradient(135deg,#2d7a3a,#48b356)':'linear-gradient(145deg,#fafafa,#ebebeb)',
+    color:active?'white':'#6b7280',
+    boxShadow:active?'3px 3px 7px rgba(45,122,58,.3),-1px -1px 4px rgba(255,255,255,.1)':'3px 3px 7px var(--sd),-3px -3px 7px var(--sl)'}}>
+    {icon&&<I n={icon} s={14}/>}{label}
+  </button>
+);
+
+/* ── genFields: mock filled data per response ── */
+function genFields(resp){
+  const isM=resp.avatar==='👨';
+  if(resp.realData){
+    const items=[
+      ['ชื่อ-นามสกุล (Full Name)',resp.name],
+      ['ตำแหน่งที่ต้องการ (Position Applied)',resp.position],
+    ];
+    if(resp.salary) items.push(['เงินเดือนที่ต้องการ',resp.salary+' บาท/เดือน']);
+    if(resp.tel) items.push(['เบอร์โทรศัพท์ (Mobile)',resp.tel]);
+    return [{section:'ข้อมูลที่กรอกผ่านฟอร์ม',type:'fields',items}];
+  }
+  return[
+    {section:'ข้อมูลส่วนตัว (Personal Information)',type:'fields',items:[
+      ['ชื่อ-นามสกุล (Full Name)',resp.name],
+      ['ตำแหน่งที่ต้องการ (Position Applied)',resp.position],
+      ['เงินเดือนที่ต้องการ',resp.salary?resp.salary+' บาท/เดือน':'ตามโครงสร้างบริษัท'],
+      ['ที่อยู่ปัจจุบัน','123/'+resp.id.slice(1)+' ถ.สุขุมวิท แขวงบางนา เขตบางนา กรุงเทพฯ 10260'],
+      ['เบอร์โทรศัพท์ (Mobile)',resp.tel],
+      ['อีเมล (E-mail)','applicant'+resp.id.slice(1)+'@mail.com'],
+      ['วัน/เดือน/ปีเกิด','15 ก.พ. 2538 (อายุ 30 ปี)'],
+      ['เพศ (Sex)',isM?'ชาย (Male)':'หญิง (Female)'],
+      ['สถานภาพ (Marital Status)','โสด'],
+    ]},
+    {section:'การศึกษา (Education)',type:'table',
+     cols:['ระดับการศึกษา','สถาบัน','สาขาวิชา','ปีที่จบ'],
+     rows:[
+       ['ปริญญาตรี','มหาวิทยาลัยเกษตรศาสตร์','วิทยาการคอมพิวเตอร์','2560'],
+       ['ปวส.','วิทยาลัยเทคนิคกรุงเทพ','อิเล็กทรอนิกส์','2557'],
+     ]},
+    {section:'ประสบการณ์ทำงาน (Work Experience)',type:'table',
+     cols:['บริษัท/องค์กร','ตำแหน่ง','เริ่ม','ถึง','เหตุที่ออก'],
+     rows:[
+       ['บริษัท เอบีซี เทค จำกัด','Staff Developer','ม.ค. 63','ธ.ค. 64','เพื่อความก้าวหน้า'],
+       ['บริษัท เอ็กซ์วาย โซลูชั่น จำกัด',resp.position,'ม.ค. 65','ปัจจุบัน','—'],
+     ]},
+    {section:'ความสามารถทางภาษา (Language Ability)',type:'table',
+     cols:['ภาษา','พูด','อ่าน','เขียน'],
+     rows:[
+       ['ภาษาไทย','ดี','ดี','ดี'],
+       ['ภาษาอังกฤษ','ปานกลาง','ดี','พอใช้'],
+       ['ภาษาญี่ปุ่น','พอใช้','พอใช้','—'],
+     ]},
+    {section:'ความสามารถพิเศษ (Special Ability)',type:'fields',items:[
+      ['ทักษะคอมพิวเตอร์','Microsoft Word, Microsoft Excel, PowerPoint, Adobe Photoshop'],
+      ['แนะนำตัวเอง (Self Introduction)','มีประสบการณ์การทำงานในสาย '+resp.position+' มากกว่า 3 ปี มีความมุ่งมั่นในการพัฒนาตนเองและพร้อมรับงานที่ท้าทาย ทำงานเป็นทีมได้ดี มีทักษะการสื่อสารที่ชัดเจน'],
+    ]},
+  ];
+}
+
+/* ── BlockSettings ── */
+function BlockSettings({block,onChange,onDelete}){
+  const upd=(k,v)=>onChange({...block,[k]:v});
+  const updOpt=(i,v)=>{const o=[...( block.options||[])];o[i]=v;upd('options',o);};
+  const addOpt=()=>upd('options',[...(block.options||[]),('ตัวเลือก '+(( block.options?.length||0)+1))]);
+  const delOpt=(i)=>{const o=[...(block.options||[])];o.splice(i,1);upd('options',o);};
+  const updCol=(i,v)=>{const c=[...(block.columns||[])];c[i]=v;upd('columns',c);};
+  const updRow=(i,v)=>{const r=[...(block.rows||[])];r[i]=v;upd('rows',r);};
+  return(
+    <div style={{padding:'0 4px'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+        <span style={{fontSize:13,fontWeight:600,color:'#374151'}}>ตั้งค่า Block</span>
+        <button onClick={onDelete} className="nbd" style={{padding:'5px 10px',fontSize:11,display:'flex',alignItems:'center',gap:3}}>
+          <I n="delete" s={14}/> ลบ
+        </button>
+      </div>
+      {block.type!=='section'&&block.type!=='table'&&block.type!=='matrix'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="Label"/>
+          <NI value={block.label} onChange={v=>upd('label',v)} placeholder="ชื่อ Field"/>
+        </div>
+      )}
+      {block.type==='section'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="หัวข้อ"/>
+          <NI value={block.label} onChange={v=>upd('label',v)} placeholder="ชื่อหัวข้อ"/>
+        </div>
+      )}
+      {(block.type==='text'||block.type==='number'||block.type==='textarea')&&(
+        <div style={{marginBottom:10}}>
+          <SL c="Placeholder"/>
+          <NI value={block.placeholder} onChange={v=>upd('placeholder',v)} placeholder="ข้อความตัวอย่าง"/>
+        </div>
+      )}
+      {block.type==='text'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="Input Type"/>
+          <NS value={block.inputType||'text'} onChange={v=>upd('inputType',v)}
+            opts={[{v:'text',l:'Text'},{v:'email',l:'Email'},{v:'tel',l:'Tel'},{v:'url',l:'URL'}]}/>
+        </div>
+      )}
+      {block.type==='number'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="หน่วย (Unit)"/>
+          <NI value={block.unit} onChange={v=>upd('unit',v)} placeholder="เช่น บาท, ปี, cm"/>
+        </div>
+      )}
+      {block.type==='textarea'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="จำนวนบรรทัด"/>
+          <NI type="number" value={block.rows??4} onChange={v=>upd('rows',+v)} placeholder="4"/>
+        </div>
+      )}
+      {(block.type==='radio'||block.type==='checkbox')&&(
+        <div style={{marginBottom:10}}>
+          <SL c="ตัวเลือก"/>
+          {(block.options||[]).map((o,i)=>(
+            <div key={i} style={{display:'flex',gap:5,marginBottom:5}}>
+              <NI value={o} onChange={v=>updOpt(i,v)} placeholder={'ตัวเลือก '+(i+1)}/>
+              <button onClick={()=>delOpt(i)} className="nb" style={{padding:'0 8px',flexShrink:0}}><I n="close" s={14}/></button>
+            </div>
+          ))}
+          <button onClick={addOpt} className="nb" style={{width:'100%',padding:'6px',fontSize:12,marginTop:2,display:'flex',alignItems:'center',justifyContent:'center',gap:4}}>
+            <I n="add" s={14}/>เพิ่มตัวเลือก
+          </button>
+        </div>
+      )}
+      {block.type==='radio'&&(
+        <div style={{marginBottom:10}}>
+          <SL c="Layout"/>
+          <NS value={block.layout||'vertical'} onChange={v=>upd('layout',v)}
+            opts={[{v:'vertical',l:'แนวตั้ง'},{v:'horizontal',l:'แนวนอน'}]}/>
+        </div>
+      )}
+      {block.type==='table'&&(
+        <>
+          <div style={{marginBottom:10}}>
+            <SL c="ชื่อตาราง"/>
+            <NI value={block.label} onChange={v=>upd('label',v)} placeholder="ชื่อตาราง"/>
+          </div>
+          <div style={{marginBottom:10}}>
+            <SL c="คอลัมน์"/>
+            {(block.columns||[]).map((c,i)=>(
+              <div key={i} style={{display:'flex',gap:4,marginBottom:5}}>
+                <NI value={c} onChange={v=>updCol(i,v)} placeholder={'คอลัมน์ '+(i+1)}/>
+                <button onClick={()=>{const a=[...(block.columns||[])];a.splice(i,1);upd('columns',a);}} className="nb" style={{padding:'0 6px',flexShrink:0}}><I n="close" s={12}/></button>
+              </div>
+            ))}
+            <button onClick={()=>upd('columns',[...(block.columns||[]),'คอลัมน์ '+((block.columns?.length||0)+1)])} className="nb" style={{width:'100%',padding:'5px',fontSize:11,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+              <I n="add" s={12}/>เพิ่มคอลัมน์
+            </button>
+          </div>
+          <div style={{marginBottom:10}}>
+            <SL c="แถวเริ่มต้น"/>
+            {(block.rows||[]).map((r,i)=>(
+              <div key={i} style={{display:'flex',gap:4,marginBottom:5}}>
+                <NI value={r} onChange={v=>updRow(i,v)} placeholder={'แถว '+(i+1)}/>
+                <button onClick={()=>{const a=[...(block.rows||[])];a.splice(i,1);upd('rows',a);}} className="nb" style={{padding:'0 6px',flexShrink:0}}><I n="close" s={12}/></button>
+              </div>
+            ))}
+            <button onClick={()=>upd('rows',[...(block.rows||[]),''])} className="nb" style={{width:'100%',padding:'5px',fontSize:11,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+              <I n="add" s={12}/>เพิ่มแถว
+            </button>
+          </div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <SL c="เพิ่มแถวได้"/>
+            <Toggle v={block.canAddRows} on={v=>upd('canAddRows',v)}/>
+          </div>
+        </>
+      )}
+      {block.type==='matrix'&&(
+        <>
+          <div style={{marginBottom:10}}>
+            <SL c="ชื่อตาราง"/>
+            <NI value={block.label} onChange={v=>upd('label',v)} placeholder="ชื่อตาราง"/>
+          </div>
+          <div style={{marginBottom:10}}>
+            <SL c="แถว (Rows)"/>
+            {(block.rows||[]).map((r,ri)=>(
+              <div key={ri} style={{display:'flex',gap:4,marginBottom:5}}>
+                <NI value={r} onChange={v=>{const a=[...(block.rows||[])];a[ri]=v;upd('rows',a);}} placeholder={'แถว '+(ri+1)}/>
+                <button onClick={()=>{const a=[...(block.rows||[])];a.splice(ri,1);upd('rows',a);}} className="nb" style={{padding:'0 6px',flexShrink:0}}><I n="close" s={12}/></button>
+              </div>
+            ))}
+            <button onClick={()=>upd('rows',[...(block.rows||[]),'แถว '+((block.rows?.length||0)+1)])} className="nb" style={{width:'100%',padding:'5px',fontSize:11,marginTop:2,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+              <I n="add" s={12}/>เพิ่มแถว
+            </button>
+          </div>
+          <div style={{marginBottom:4}}>
+            <SL c="กลุ่ม / หัวข้อ (Groups)"/>
+          </div>
+          {(block.groups||[]).map((g,gi)=>(
+            <div key={gi} className="neu-in-sm" style={{padding:'8px 10px',marginBottom:8}}>
+              <div style={{display:'flex',gap:4,marginBottom:6,alignItems:'center'}}>
+                <span style={{fontSize:10,color:'#9ca3af',flexShrink:0}}>ชื่อ:</span>
+                <NI value={g.label} onChange={v=>{const gs=JSON.parse(JSON.stringify(block.groups||[]));gs[gi].label=v;upd('groups',gs);}} placeholder={'กลุ่ม '+(gi+1)}/>
+                <button onClick={()=>{const gs=JSON.parse(JSON.stringify(block.groups||[]));gs.splice(gi,1);upd('groups',gs);}} className="nbd" style={{padding:'2px 5px',flexShrink:0}}><I n="close" s={12}/></button>
+              </div>
+              <div style={{fontSize:10,color:'#6b7280',marginBottom:4}}>ระดับ:</div>
+              {(g.levels||[]).map((lv,li)=>(
+                <div key={li} style={{display:'flex',gap:4,marginBottom:4}}>
+                  <NI value={lv} onChange={v=>{const gs=JSON.parse(JSON.stringify(block.groups||[]));gs[gi].levels[li]=v;upd('groups',gs);}} placeholder={'ระดับ '+(li+1)}/>
+                  <button onClick={()=>{const gs=JSON.parse(JSON.stringify(block.groups||[]));gs[gi].levels.splice(li,1);upd('groups',gs);}} className="nb" style={{padding:'0 5px',flexShrink:0}}><I n="close" s={11}/></button>
+                </div>
+              ))}
+              <button onClick={()=>{const gs=JSON.parse(JSON.stringify(block.groups||[]));gs[gi].levels.push('ระดับ '+((gs[gi].levels?.length||0)+1));upd('groups',gs);}} className="nb" style={{width:'100%',padding:'4px',fontSize:10,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+                <I n="add" s={11}/>เพิ่มระดับ
+              </button>
+            </div>
+          ))}
+          <button onClick={()=>upd('groups',[...(block.groups||[]),{label:'กลุ่ม '+((block.groups?.length||0)+1),levels:['ดี','ปานกลาง','พอใช้']}])} className="nb" style={{width:'100%',padding:'6px',fontSize:11,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+            <I n="add" s={13}/>เพิ่มกลุ่ม
+          </button>
+        </>
+      )}
+      {block.type!=='section'&&block.type!=='pagebreak'&&(
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+          <SL c="จำเป็น (Required)"/>
+          <Toggle v={!!block.required} on={v=>upd('required',v)}/>
+        </div>
+      )}
+      {block.type!=='pagebreak'&&(
+      <div style={{marginBottom:10}}>
+        <SL c="ขนาด (Column Span)"/>
+        <NS value={block.colSpan||'full'} onChange={v=>upd('colSpan',v)}
+          opts={[{v:'full',l:'เต็มแถว'},{v:'half',l:'ครึ่งแถว'},{v:'third',l:'1/3 แถว'}]}/>
+      </div>
+      )}
+      {block.colSpan!=='full'&&(
+        <>
+          <div style={{marginBottom:10}}>
+            <SL c="ตำแหน่งใน Row"/>
+            <div style={{display:'flex',gap:4}}>
+              {[{v:'start',i:'format_align_left'},{v:'center',i:'format_align_center'},{v:'end',i:'format_align_right'}].map(({v,i})=>(
+                <button key={v} onClick={()=>upd('blockAlign',v)}
+                  className={(block.blockAlign||'start')===v?'nbg':'nb'}
+                  style={{flex:1,padding:'6px',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <I n={i} s={14}/>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <SL c="ขึ้นแถวใหม่"/>
+            <Toggle v={!!block.breakRow} on={v=>upd('breakRow',v)}/>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ── FormSettings ── */
+function FormSettings({logo,desc,onLogoChange,onDescChange}){
+  const fileRef=useRef();
+  const handleFile=e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>onLogoChange({...logo,dataUrl:ev.target.result});
+    reader.readAsDataURL(file);
+  };
+  return(
+    <div style={{padding:'0 4px'}}>
+      <div style={{marginBottom:14}}>
+        <span style={{fontSize:13,fontWeight:600,color:'#374151'}}>ตั้งค่าฟอร์ม</span>
+      </div>
+      <div style={{marginBottom:12}}>
+        <SL c="คำอธิบายฟอร์ม"/>
+        <textarea className="ni" value={desc||''} onChange={e=>onDescChange(e.target.value)}
+          placeholder="คำอธิบายหรือคำแนะนำสำหรับผู้กรอก"
+          style={{height:72,resize:'vertical'}}/>
+      </div>
+      <div style={{marginBottom:12}}>
+        <SL c="จัดชิดหัวข้อ (Title)"/>
+        <div style={{display:'flex',gap:4}}>
+          {[{v:'left',i:'format_align_left'},{v:'center',i:'format_align_center'},{v:'right',i:'format_align_right'}].map(({v,i})=>(
+            <button key={v} onClick={()=>onLogoChange({...logo,titleAlign:v})}
+              className={(logo.titleAlign||'left')===v?'nbg':'nb'}
+              style={{flex:1,padding:'7px',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <I n={i} s={15}/>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{marginBottom:12}}>
+        <SL c="โลโก้บริษัท"/>
+        {logo.dataUrl?(
+          <div style={{marginBottom:8,textAlign:'center'}}>
+            <img src={logo.dataUrl} alt="logo" style={{maxHeight:60,maxWidth:'100%',objectFit:'contain',borderRadius:6}}/>
+            <button onClick={()=>onLogoChange({...logo,dataUrl:''})} className="nb"
+              style={{display:'block',margin:'6px auto 0',padding:'4px 12px',fontSize:11}}>
+              ลบโลโก้
+            </button>
+          </div>
+        ):(
+          <button onClick={()=>fileRef.current.click()} className="nb"
+            style={{width:'100%',padding:'10px',fontSize:12,display:'flex',alignItems:'center',justifyContent:'center',gap:5}}>
+            <I n="upload" s={16}/>อัปโหลดโลโก้
+          </button>
+        )}
+        <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={handleFile}/>
+      </div>
+      {logo.dataUrl&&(
+        <>
+          <div style={{marginBottom:10}}>
+            <SL c="ตำแหน่งโลโก้ (Image)"/>
+            <div style={{display:'flex',gap:4}}>
+              {[{v:'left',i:'format_align_left'},{v:'center',i:'format_align_center'},{v:'right',i:'format_align_right'}].map(({v,i})=>(
+                <button key={v} onClick={()=>onLogoChange({...logo,position:v})}
+                  className={(logo.position||'left')===v?'nbg':'nb'}
+                  style={{flex:1,padding:'7px',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                  <I n={i} s={15}/>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}}>
+            <SL c="อยู่บรรทัดเดียวกับชื่อ"/>
+            <Toggle v={!!logo.inline} on={v=>onLogoChange({...logo,inline:v})}/>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ── NewFormDialog ── */
+function NewFormDialog({onClose,onCreate}){
+  const [title,setTitle]=useState('ใบสมัครงาน (ใหม่)');
+  const [desc,setDesc]=useState('');
+  const submit=()=>{
+    if(!title.trim())return;
+    const id='f'+Date.now();
+    onCreate({
+      id,title:title.trim(),desc:desc.trim(),active:true,
+      logo:{dataUrl:'',position:'left',inline:true,titleAlign:'left'},
+      blocks:JSON.parse(JSON.stringify(DEF_BLOCKS)),
+      createdAt:new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'}),
+      updatedAt:new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'}),
+      shareCount:0,lastSharedAt:null,
+    });
+    onClose();
+  };
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9000}}>
+      <div className="mc" style={{width:420,padding:28}} onClick={e=>e.stopPropagation()} onMouseDown={e=>e.stopPropagation()}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+          <span style={{fontSize:16,fontWeight:700,color:'#1a4d24'}}>สร้างฟอร์มใหม่</span>
+          <button onClick={onClose} className="nb" style={{padding:'6px'}}><I n="close" s={18}/></button>
+        </div>
+        <div style={{marginBottom:14}}>
+          <SL c="ชื่อฟอร์ม *"/>
+          <NI value={title} onChange={setTitle} placeholder="ชื่อฟอร์ม"/>
+        </div>
+        <div style={{marginBottom:20}}>
+          <SL c="คำอธิบาย"/>
+          <textarea className="ni" value={desc} onChange={e=>setDesc(e.target.value)}
+            placeholder="คำอธิบายสั้นๆ ของฟอร์ม"
+            style={{height:72,resize:'vertical'}}/>
+        </div>
+        <div style={{display:'flex',gap:10,justifyContent:'flex-end'}}>
+          <button onClick={onClose} className="nb" style={{padding:'9px 20px',fontSize:13}}>ยกเลิก</button>
+          <button onClick={submit} className="nbg" style={{padding:'9px 24px',fontSize:13}}>
+            <I n="add" s={16}/> สร้างฟอร์ม
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── ResponseDetailModal ── */
+function ResponseDetailModal({resp,form,onClose}){
+  if(!resp)return null;
+  const fields=genFields(resp);
+  const statusMap={new:{l:'ใหม่',c:'#3b82f6'},reviewed:{l:'ตรวจแล้ว',c:'#f59e0b'},shortlisted:{l:'คัดเลือกแล้ว',c:'#10b981'},rejected:{l:'ปฏิเสธ',c:'#ef4444'}};
+  const st=statusMap[resp.status]||statusMap.new;
+  const printPDF=()=>{
+    const logo=form?.logo;
+    const logoHtml=logo?.dataUrl?`<img src="${logo.dataUrl}" style="height:50px;object-fit:contain;margin-bottom:${logo.inline?'0':'8px'};"/>`:'';;
+    const headerHtml=logo?.dataUrl&&logo?.inline
+      ?`<div style="display:flex;align-items:center;gap:16px;justify-content:${logo.position==='center'?'center':logo.position==='right'?'flex-end':'flex-start'};margin-bottom:8px;">${logoHtml}<div><h1 style="margin:0;font-size:20px;">${form?.title||'ใบสมัครงาน'}</h1><p style="margin:4px 0 0;color:#555;font-size:13px;">${form?.desc||''}</p></div></div>`
+      :`<div style="text-align:${logo?.position||'left'};margin-bottom:8px;">${logoHtml}<h1 style="margin:4px 0 0;font-size:20px;">${form?.title||'ใบสมัครงาน'}</h1><p style="margin:4px 0 0;color:#555;font-size:13px;">${form?.desc||''}</p></div>`;
+    const sectionsHtml=fields.map(sec=>{
+      if(sec.type==='fields'){
+        const rows=sec.items.map(([k,v])=>`<tr><td style="padding:5px 8px;font-weight:600;color:#374151;width:40%;border:1px solid #e5e7eb;">${k}</td><td style="padding:5px 8px;border:1px solid #e5e7eb;">${v}</td></tr>`).join('');
+        return `<h3 style="margin:16px 0 6px;color:#1a4d24;border-bottom:2px solid #1a4d24;padding-bottom:4px;">${sec.section}</h3><table style="width:100%;border-collapse:collapse;font-size:13px;">${rows}</table>`;
+      }else{
+        const hdr=sec.cols.map(c=>`<th style="padding:5px 8px;background:#f3f4f6;border:1px solid #e5e7eb;">${c}</th>`).join('');
+        const bdy=sec.rows.map(r=>`<tr>${r.map(c=>`<td style="padding:5px 8px;border:1px solid #e5e7eb;">${c}</td>`).join('')}</tr>`).join('');
+        return `<h3 style="margin:16px 0 6px;color:#1a4d24;border-bottom:2px solid #1a4d24;padding-bottom:4px;">${sec.section}</h3><table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr>${hdr}</tr></thead><tbody>${bdy}</tbody></table>`;
+      }
+    }).join('');
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${resp.name} - ${form?.title||'ใบสมัครงาน'}</title>
+<style>body{font-family:'Prompt','Sarabun',sans-serif;margin:24px;color:#1f2937;}@media print{body{margin:12px;}}</style>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+</head><body>
+${headerHtml}
+<div style="display:flex;gap:16px;margin-bottom:12px;padding:10px;background:#f9fafb;border-radius:8px;font-size:13px;">
+  <span><b>ผู้สมัคร:</b> ${resp.name}</span>
+  <span><b>ส่งเมื่อ:</b> ${resp.submittedAt||resp.at}</span>
+  ${resp.approvedAt?`<span><b>อนุมัติเมื่อ:</b> ${resp.approvedAt}</span>`:''}
+</div>
+${sectionsHtml}
+<script>window.onload=()=>window.print();<\/script>
+</body></html>`;
+    const w=window.open('','_blank','width=900,height=700');
+    if(w){w.document.write(html);w.document.close();}
+  };
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.5)',display:'flex',alignItems:'flex-start',justifyContent:'center',zIndex:8000,overflowY:'auto',padding:'24px 16px'}} onClick={onClose}>
+      <div className="mc" style={{width:'100%',maxWidth:780,padding:0,overflow:'hidden'}} onClick={e=>e.stopPropagation()}>
+        {/* Header */}
+        <div style={{padding:'18px 24px',background:'linear-gradient(135deg,#1a4d24,#2d7a3a)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <span style={{fontSize:28}}>{resp.avatar}</span>
+            <div>
+              <div style={{fontSize:16,fontWeight:700,color:'white'}}>{resp.name}</div>
+              <div style={{fontSize:12,color:'rgba(255,255,255,.75)'}}>{resp.position} · {resp.submittedAt||resp.at}</div>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:8,alignItems:'center'}}>
+            <button onClick={printPDF} className="nb" style={{padding:'7px 14px',fontSize:12,display:'flex',alignItems:'center',gap:5}}>
+              <I n="print" s={16}/>พิมพ์ PDF
+            </button>
+            <button onClick={onClose} className="nb" style={{padding:'7px'}}><I n="close" s={18}/></button>
+          </div>
+        </div>
+        {/* Meta bar */}
+        <div style={{padding:'12px 24px',background:'#f9fafb',borderBottom:'1px solid #e5e7eb',display:'flex',gap:20,fontSize:12,color:'#6b7280'}}>
+          <span><b style={{color:'#374151'}}>สถานะ:</b> <span style={{color:st.c,fontWeight:600}}>{st.l}</span></span>
+          <span><b style={{color:'#374151'}}>เงินเดือน:</b> {resp.salary} บาท</span>
+          <span><b style={{color:'#374151'}}>โทร:</b> {resp.tel}</span>
+          {resp.approvedAt&&<span><b style={{color:'#374151'}}>อนุมัติ:</b> {resp.approvedAt}</span>}
+        </div>
+        {/* Body */}
+        <div style={{padding:'20px 24px',maxHeight:'60vh',overflowY:'auto'}}>
+          {fields.map((sec,si)=>(
+            <div key={si} style={{marginBottom:20}}>
+              <h3 style={{fontSize:13,fontWeight:700,color:'#1a4d24',borderBottom:'2px solid rgba(26,77,36,.15)',paddingBottom:6,marginBottom:10}}>{sec.section}</h3>
+              {sec.type==='fields'?(
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'6px 16px'}}>
+                  {sec.items.map(([k,v],ii)=>(
+                    <div key={ii} style={{gridColumn:v.length>40?'span 2':'span 1',padding:'6px 0',borderBottom:'1px solid #f3f4f6'}}>
+                      <div style={{fontSize:10,color:'#9ca3af',fontWeight:600,textTransform:'uppercase',letterSpacing:'.05em'}}>{k}</div>
+                      <div style={{fontSize:13,color:'#1f2937',marginTop:2}}>{v}</div>
+                    </div>
+                  ))}
+                </div>
+              ):(
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                    <thead>
+                      <tr>{sec.cols.map((c,ci)=>(
+                        <th key={ci} style={{padding:'6px 10px',background:'#f3f4f6',border:'1px solid #e5e7eb',fontWeight:600,textAlign:'left'}}>{c}</th>
+                      ))}</tr>
+                    </thead>
+                    <tbody>
+                      {sec.rows.map((row,ri)=>(
+                        <tr key={ri}>{row.map((cell,ci)=>(
+                          <td key={ci} style={{padding:'5px 10px',border:'1px solid #e5e7eb'}}>{cell}</td>
+                        ))}</tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── BlockRender ── */
+function BlockRender({block,preview=false}){
+  const [tableData,setTableData]=useState(()=>{
+    if(block.type==='table'){
+      return (block.rows||[]).map(r=>Array.isArray(r)?r:(block.columns||[]).map(()=>r||''));
+    }
+    return [];
+  });
+  const [matrixSel,setMatrixSel]=useState({});
+  const [checkSel,setCheckSel]=useState({});
+  const labelStyle={fontSize:12,fontWeight:600,color:'#4b5563',marginBottom:5,display:'block'};
+  const reqStar=block.required?<span style={{color:'#ef4444',marginLeft:2}}>*</span>:null;
+  if(block.type==='section')return(
+    <div style={{borderLeft:'4px solid #2d7a3a',paddingLeft:12,margin:'4px 0 2px'}}>
+      <span style={{fontSize:14,fontWeight:700,color:'#1a4d24'}}>{block.label}</span>
+    </div>
+  );
+  if(block.type==='text'||block.type==='number'||block.type==='date')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div style={{display:'flex',gap:6,alignItems:'center'}}>
+        <input disabled={!preview} type={block.type==='date'?'date':block.inputType||block.type}
+          className="ni" placeholder={block.placeholder||''}
+          style={{flex:1}}/>
+        {block.unit&&<span style={{fontSize:11,color:'#9ca3af',flexShrink:0}}>{block.unit}</span>}
+      </div>
+    </div>
+  );
+  if(block.type==='textarea')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <textarea disabled={!preview} className="ni" placeholder={block.placeholder||''}
+        rows={block.rows||4} maxLength={block.maxLength} style={{resize:'vertical'}}/>
+      {block.maxLength&&<div style={{textAlign:'right',fontSize:10,color:'#9ca3af',marginTop:2}}>max {block.maxLength} ตัวอักษร</div>}
+    </div>
+  );
+  if(block.type==='radio')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div style={{display:'flex',flexDirection:block.layout==='horizontal'?'row':'column',gap:8,flexWrap:'wrap'}}>
+        {(block.options||[]).map((o,i)=>(
+          <label key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:13,cursor:'pointer'}}>
+            <input type="radio" name={block.id} disabled={!preview} style={{accentColor:'#2d7a3a'}}/>{o}
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+  if(block.type==='checkbox')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div style={{display:'flex',flexDirection:'column',gap:7}}>
+        {(block.options||[]).map((o,i)=>(
+          <label key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:13,cursor:'pointer'}}>
+            <input type="checkbox" disabled={!preview} style={{accentColor:'#2d7a3a'}}
+              checked={!!checkSel[i]} onChange={()=>preview&&setCheckSel(s=>({...s,[i]:!s[i]}))}/>{o}
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+  if(block.type==='table')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div style={{overflowX:'auto'}}>
+        <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+          <thead>
+            <tr>{(block.columns||[]).map((c,i)=>(
+              <th key={i} style={{padding:'7px 8px',background:'rgba(45,122,58,.08)',border:'1px solid rgba(45,122,58,.2)',fontWeight:600,fontSize:11,textAlign:'center'}}>{c}</th>
+            ))}</tr>
+          </thead>
+          <tbody>
+            {tableData.map((row,ri)=>(
+              <tr key={ri}>
+                {row.map((cell,ci)=>(
+                  <td key={ci} style={{border:'1px solid #e5e7eb',padding:2}}>
+                    <input className="tbl-in" value={cell} readOnly={!preview}
+                      onChange={e=>{if(!preview)return;const d=[...tableData];d[ri]=[...d[ri]];d[ri][ci]=e.target.value;setTableData(d);}}/>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {block.canAddRows&&preview&&(
+          <button onClick={()=>setTableData(d=>[...d,(block.columns||[]).map(()=>'')])} className="nb"
+            style={{width:'100%',padding:'5px',fontSize:11,marginTop:4,display:'flex',alignItems:'center',justifyContent:'center',gap:3}}>
+            <I n="add" s={13}/>เพิ่มแถว
+          </button>
+        )}
+      </div>
+    </div>
+  );
+  if(block.type==='matrix')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div style={{overflowX:'auto'}}>
+        <table style={{width:'100%',borderCollapse:'collapse',fontSize:11}}>
+          <thead>
+            <tr>
+              <th style={{padding:'5px 8px',border:'1px solid rgba(45,122,58,.2)',background:'rgba(45,122,58,.08)'}}></th>
+              {(block.groups||[]).map((g,gi)=>(
+                <th key={gi} colSpan={g.levels.length} style={{padding:'5px 8px',border:'1px solid rgba(45,122,58,.2)',background:'rgba(45,122,58,.08)',textAlign:'center'}}>{g.label}</th>
+              ))}
+            </tr>
+            <tr>
+              <th style={{padding:'4px 8px',border:'1px solid rgba(45,122,58,.2)',background:'rgba(45,122,58,.04)'}}></th>
+              {(block.groups||[]).flatMap((g,gi)=>g.levels.map((lv,li)=>(
+                <th key={gi+'-'+li} style={{padding:'4px 6px',border:'1px solid rgba(45,122,58,.2)',background:'rgba(45,122,58,.04)',fontWeight:500}}>{lv}</th>
+              )))}
+            </tr>
+          </thead>
+          <tbody>
+            {(block.rows||[]).map((row,ri)=>(
+              <tr key={ri}>
+                <td style={{padding:'5px 8px',border:'1px solid #e5e7eb',fontWeight:500}}>{row}</td>
+                {(block.groups||[]).flatMap((g,gi)=>g.levels.map((lv,li)=>{
+                  const key=row+'-'+gi;
+                  const sel=matrixSel[key];
+                  return(
+                    <td key={gi+'-'+li} style={{border:'1px solid #e5e7eb',textAlign:'center',padding:4}}>
+                      <input type="radio" name={block.id+'-'+ri+'-'+gi} disabled={!preview}
+                        checked={sel===li} onChange={()=>preview&&setMatrixSel(s=>({...s,[key]:li}))}
+                        style={{accentColor:'#2d7a3a'}}/>
+                    </td>
+                  );
+                }))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+  if(block.type==='pagebreak')return(
+    <div style={{width:'100%',display:'flex',alignItems:'center',gap:8,padding:'6px 0',userSelect:'none'}}>
+      <div style={{flex:1,borderTop:'2px dashed #d1d5db'}}/>
+      <span style={{fontSize:10,color:'#9ca3af',fontWeight:600,letterSpacing:'.08em',whiteSpace:'nowrap',display:'flex',alignItems:'center',gap:4}}>
+        <I n="content_cut" s={13} style={{color:'#9ca3af'}}/>แบ่งหน้า A4
+      </span>
+      <div style={{flex:1,borderTop:'2px dashed #d1d5db'}}/>
+    </div>
+  );
+  if(block.type==='photo')return(
+    <div>
+      <label style={labelStyle}>{block.label}{reqStar}</label>
+      <div className="neu-in" style={{padding:'18px',textAlign:'center',borderRadius:10}}>
+        <I n="photo_camera" s={28} c="" style={{color:'#9ca3af'}}/>
+        <div style={{fontSize:11,color:'#9ca3af',marginTop:6}}>{block.accept||'image/*'} · max {block.maxSizeMB||2}MB</div>
+        {preview&&<button className="nb" style={{padding:'6px 16px',fontSize:12,marginTop:8}}>เลือกไฟล์</button>}
+      </div>
+    </div>
+  );
+  return null;
+}
+
+/* ── Sidebar ── */
+function Sidebar({view,setView,onNewForm}){
+  const nav=[
+    {id:'dashboard',  icon:'home',        th:'ภาพรวม',         en:'Overall'},
+    {id:'builder',    icon:'edit_note',   th:'สร้างฟอร์ม',     en:'Create Document Form', action:'new'},
+    {id:'forms_list', icon:'folder_open', th:'ฟอร์มที่มีอยู่',  en:'Current Document Form'},
+    {id:'responses',  icon:'inbox',       th:'เอกสารตอบกลับ',  en:'Responding Documents'},
+  ];
+  return(
+    <div className="sb no-print" style={{width:224,height:'100vh',display:'flex',flexDirection:'column',flexShrink:0}}>
+      <div style={{padding:'20px 16px',borderBottom:'1px solid rgba(255,255,255,.1)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{width:38,height:38,background:'rgba(255,255,255,.15)',borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'inset 1px 1px 4px rgba(0,0,0,.2)'}}>
+            <I n="description" s={22} c="text-white"/>
+          </div>
+          <div>
+            <div style={{fontWeight:700,fontSize:14,color:'white',lineHeight:1.2}}>HR FormKit</div>
+            <div style={{fontSize:10,color:'rgba(255,255,255,.45)'}}>Document Management</div>
+          </div>
+        </div>
+      </div>
+      <nav style={{flex:1,padding:'12px 10px',display:'flex',flexDirection:'column',gap:2}}>
+        {nav.map(item=>{
+          const active=view===item.id||(item.id==='forms_list'&&(view==='edit_form'||view==='preview'));
+          return(
+          <button key={item.id}
+            onClick={()=>item.action==='new'?onNewForm():setView(item.id)}
+            style={{display:'flex',alignItems:'center',gap:10,padding:'9px 12px',borderRadius:10,border:'none',cursor:'pointer',textAlign:'left',transition:'all .15s',width:'100%',
+              background:active?'rgba(255,255,255,.18)':'transparent',
+              fontFamily:"'Prompt',sans-serif"}}>
+            <I n={item.icon} s={19} c={active?'text-white':'text-green-200 opacity-70'}/>
+            <div>
+              <div style={{fontSize:12,fontWeight:active?600:400,color:active?'white':'rgba(255,255,255,.65)',lineHeight:1.2}}>{item.th}</div>
+              <div style={{fontSize:9,color:'rgba(255,255,255,.35)',marginTop:1}}>{item.en}</div>
+            </div>
+          </button>
+          );
+        })}
+      </nav>
+      <div style={{padding:'12px 10px',borderTop:'1px solid rgba(255,255,255,.1)'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8,padding:'8px 10px'}}>
+          <I n="account_circle" s={28} c="text-green-300 opacity-80"/>
+          <div><div style={{color:'rgba(255,255,255,.9)',fontWeight:500,fontSize:12}}>HR Admin</div><div style={{color:'rgba(255,255,255,.4)',fontSize:10}}>hr@company.com</div></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── DashboardView ── */
+const DASH_PER_PAGE=50;
+function DashboardView({forms,responses,setView,setActiveFormId,onViewResp,setResponses}){
+  const [filterForm,setFilterForm]=useState('all');
+  const [filterStatus,setFilterStatus]=useState('all');
+  const [dashPage,setDashPage]=useState(0);
+  const statusMap={new:{l:'ใหม่',c:'#3b82f6',bg:'#eff6ff'},reviewed:{l:'ตรวจแล้ว',c:'#f59e0b',bg:'#fffbeb'},shortlisted:{l:'คัดเลือกแล้ว',c:'#10b981',bg:'#ecfdf5'},rejected:{l:'ปฏิเสธ',c:'#ef4444',bg:'#fef2f2'}};
+  const filtered=responses.filter(r=>(filterForm==='all'||r.formId===filterForm)&&(filterStatus==='all'||r.status===filterStatus));
+  const totalDashPages=Math.max(1,Math.ceil(filtered.length/DASH_PER_PAGE));
+  const safeDashPage=Math.min(dashPage,totalDashPages-1);
+  const dashPageItems=filtered.slice(safeDashPage*DASH_PER_PAGE,(safeDashPage+1)*DASH_PER_PAGE);
+  useEffect(()=>setDashPage(0),[filterForm,filterStatus]);
+  const statCounts=st=>responses.filter(r=>r.status===st).length;
+  const newCount=statCounts('new');
+  return(
+    <div style={{padding:28,overflowY:'auto',flex:1}}>
+      <div style={{marginBottom:20}}>
+        <h1 style={{fontSize:22,fontWeight:700,color:'#1a2e1a'}}>ภาพรวม <span style={{fontSize:13,fontWeight:400,color:'#9ca3af'}}>(Overall)</span></h1>
+        <p style={{fontSize:13,color:'#9ca3af',marginTop:3}}>สวัสดี HR Admin — มีเอกสารตอบกลับใหม่ {newCount} รายการ</p>
+      </div>
+      {/* Flat stat bar */}
+      <div className="neu" style={{marginBottom:24,overflow:'hidden'}}>
+        <div style={{padding:'14px 20px',borderBottom:'1px solid #f0f0f0',display:'flex',alignItems:'center',gap:6}}>
+          <I n="bar_chart" s={18} c="text-green-700"/><span style={{fontWeight:600,fontSize:14,color:'#374151'}}>สรุปภาพรวม</span>
+        </div>
+        <div className="stat-bar">
+          {[
+            {label:'ฟอร์มทั้งหมด',  value:forms.length,           icon:'description',    color:'#2563eb'},
+            {label:'เอกสารตอบกลับ', value:responses.length,        icon:'inbox',          color:'#2d7a3a'},
+            {label:'รอตรวจสอบ',     value:newCount,                icon:'schedule',       color:'#d97706'},
+            {label:'เปิดใช้งาน',    value:forms.filter(f=>f.active!==false).length, icon:'check_circle', color:'#7c3aed'},
+          ].map((s,i)=>(
+            <div key={i} className="stat-col">
+              <I n={s.icon} s={20} c="" style={{color:s.color}}/>
+              <div style={{fontSize:26,fontWeight:700,color:s.color,marginTop:4,lineHeight:1}}>{s.value}</div>
+              <div style={{fontSize:11,color:'#9ca3af',marginTop:3}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Response list */}
+      <div className="neu" style={{overflow:'hidden'}}>
+        <div style={{padding:'14px 20px',borderBottom:'1px solid #f0f0f0',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8}}>
+          <div style={{display:'flex',alignItems:'center',gap:6}}>
+            <I n="inbox" s={18} c="text-green-700"/><span style={{fontWeight:600,fontSize:14,color:'#374151'}}>เอกสารตอบกลับล่าสุด</span>
+          </div>
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',alignItems:'center'}}>
+            <select className="ni" value={filterForm} onChange={e=>setFilterForm(e.target.value)} style={{width:'auto',padding:'5px 10px',fontSize:11,cursor:'pointer'}}>
+              <option value="all">ทุกฟอร์ม</option>
+              {forms.map(f=><option key={f.id} value={f.id}>{f.title}</option>)}
+            </select>
+            {['all',...Object.keys(statusMap)].map(s=>(
+              <Chip key={s} label={s==='all'?'ทั้งหมด':statusMap[s].l} active={filterStatus===s} onClick={()=>setFilterStatus(s)}/>
+            ))}
+            <button onClick={()=>setView('responses')} style={{background:'transparent',border:'none',cursor:'pointer',fontSize:12,color:'#2d7a3a',fontFamily:"'Prompt',sans-serif",fontWeight:500,marginLeft:4}}>ดูทั้งหมด →</button>
+          </div>
+        </div>
+        {filtered.length===0&&<div style={{padding:'32px',textAlign:'center',color:'#9ca3af',fontSize:13}}>ไม่พบข้อมูล</div>}
+        {dashPageItems.map(r=>{
+          const st=statusMap[r.status]||statusMap.new;
+          const fm=forms.find(f=>f.id===r.formId);
+          return(
+            <div key={r.id} className="resp-row" onClick={()=>onViewResp(r)}>
+              <span style={{fontSize:22}}>{r.avatar}</span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:13,fontWeight:600,color:'#1f2937'}}>{r.name}</div>
+                <div style={{fontSize:11,color:'#9ca3af'}}>{r.position} · {fm?.title}</div>
+              </div>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:3}}>
+                <span className="bdg" style={{background:st.bg,color:st.c}}>{st.l}</span>
+                <span style={{fontSize:10,color:'#9ca3af'}}>{r.at}</span>
+              </div>
+              <button onClick={e=>{e.stopPropagation();setResponses&&setResponses(prev=>prev.map(x=>x.id===r.id?{...x,starred:!x.starred}:x));}} style={{background:'none',border:'none',cursor:'pointer',padding:'2px 4px',flexShrink:0}}>
+                <I n="star" s={16} c="" style={{color:r.starred?'#f59e0b':'#d1d5db'}}/>
+              </button>
+            </div>
+          );
+        })}
+        {totalDashPages>1&&(
+          <div style={{padding:'10px 20px',borderTop:'1px solid #f0f0f0',display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}}>
+            <span style={{fontSize:12,color:'#9ca3af'}}>หน้า {safeDashPage+1} / {totalDashPages} ({filtered.length} รายการ)</span>
+            <div style={{display:'flex',gap:6}}>
+              <button onClick={()=>setDashPage(p=>Math.max(0,p-1))} disabled={safeDashPage===0}
+                className="nb" style={{padding:'5px 10px',fontSize:12,display:'flex',alignItems:'center',gap:3,opacity:safeDashPage===0?.4:1}}>
+                <I n="chevron_left" s={15}/>ก่อนหน้า
+              </button>
+              <button onClick={()=>setDashPage(p=>Math.min(totalDashPages-1,p+1))} disabled={safeDashPage===totalDashPages-1}
+                className="nb" style={{padding:'5px 10px',fontSize:12,display:'flex',alignItems:'center',gap:3,opacity:safeDashPage===totalDashPages-1?.4:1}}>
+                ถัดไป<I n="chevron_right" s={15}/>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── ShareModal ── */
+function ShareModal({form,onClose,onConfirmShare}){
+  const [copied,setCopied]=useState(false);
+  const [days,setDays]=useState('7');
+  const mockUrl=`${window.location.origin}${window.location.pathname}?form=${form.id}`;
+  const copy=()=>{
+    navigator.clipboard?.writeText(mockUrl).catch(()=>{});
+    setCopied(true);
+    setTimeout(()=>setCopied(false),2000);
+  };
+  const deadline=days?new Date(Date.now()+parseInt(days)*86400000).toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'}):'';
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9500}}>
+      <div className="mc" style={{width:460,padding:28}} onClick={e=>e.stopPropagation()} onMouseDown={e=>e.stopPropagation()}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <I n="share" s={22} c="" style={{color:'#2d7a3a'}}/>
+            <span style={{fontSize:15,fontWeight:700,color:'#1a4d24'}}>แชร์ฟอร์ม</span>
+          </div>
+          <button onClick={onClose} className="nb" style={{padding:'6px'}}><I n="close" s={18}/></button>
+        </div>
+        <div className="neu-in-sm" style={{padding:'10px 14px',marginBottom:14,borderRadius:10}}>
+          <div style={{fontSize:11,color:'#9ca3af',marginBottom:4}}>ชื่อฟอร์ม</div>
+          <div style={{fontSize:13,fontWeight:600,color:'#1a4d24'}}>{form.title}</div>
+        </div>
+        <div style={{marginBottom:14}}>
+          <SL c="ลิงก์สำหรับกรอกฟอร์ม"/>
+          <div style={{display:'flex',gap:8}}>
+            <div className="neu-in-sm" style={{flex:1,padding:'8px 12px',fontSize:12,color:'#374151',fontFamily:"monospace",overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',borderRadius:8}}>
+              {mockUrl}
+            </div>
+            <button onClick={copy} className={copied?'nbg':'nb'} style={{padding:'8px 14px',fontSize:12,display:'flex',alignItems:'center',gap:4,flexShrink:0}}>
+              <I n={copied?'check':'content_copy'} s={15}/>{copied?'คัดลอกแล้ว!':'คัดลอก'}
+            </button>
+          </div>
+        </div>
+        <div style={{marginBottom:20}}>
+          <SL c="กำหนดส่งภายใน (วัน)"/>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <input className="ni" type="number" min="1" max="365" value={days} onChange={e=>setDays(e.target.value)}
+              style={{width:80}}/>
+            <span style={{fontSize:12,color:'#6b7280'}}>วัน{deadline&&` — ครบกำหนด ${deadline}`}</span>
+          </div>
+        </div>
+        <div className="neu-in-sm" style={{padding:'10px 14px',marginBottom:18,borderRadius:10,display:'flex',alignItems:'flex-start',gap:8}}>
+          <I n="info" s={16} c="" style={{color:'#3b82f6',flexShrink:0,marginTop:1}}/>
+          <span style={{fontSize:11,color:'#6b7280',lineHeight:1.5}}>
+            ส่งลิงก์นี้ให้ผู้สมัครกรอกแบบฟอร์ม เมื่อ Submit สำเร็จจะปรากฏใน "เอกสารตอบกลับ" โดยอัตโนมัติ
+          </span>
+        </div>
+        <div style={{display:'flex',justifyContent:'flex-end'}}>
+          <button onClick={()=>{onConfirmShare&&onConfirmShare();onClose();}} className="nbg" style={{padding:'9px 24px',fontSize:13}}>เสร็จสิ้น</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── SubmitFormModal ── */
+function SubmitFormModal({form,onClose,onSubmit}){
+  const [name,setName]=useState('');
+  const [position,setPosition]=useState('');
+  const [salary,setSalary]=useState('');
+  const [tel,setTel]=useState('');
+  const [done,setDone]=useState(false);
+  const avatars=['👨','👩','🧑','👨‍💼','👩‍💼','🧑‍💼'];
+  const submit=()=>{
+    if(!name.trim()||!position.trim())return;
+    const now=new Date();
+    const ts=now.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})+', '+now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+    onSubmit({
+      id:'r'+Date.now(),
+      formId:form.id,
+      name:name.trim(),
+      position:position.trim(),
+      salary:salary||'',
+      tel:tel||'',
+      status:'new',
+      starred:false,
+      realData:true,
+      avatar:avatars[Math.floor(Math.random()*avatars.length)],
+      at:now.toLocaleDateString('th-TH',{day:'numeric',month:'short'})+' '+now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}),
+      submittedAt:ts,
+      approvedAt:'',
+    });
+    setDone(true);
+  };
+  if(done)return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9600}}>
+      <div className="mc" style={{width:340,padding:32,textAlign:'center'}}>
+        <I n="check_circle" s={52} c="" style={{color:'#2d7a3a'}}/>
+        <div style={{fontSize:16,fontWeight:700,color:'#1a4d24',marginTop:12}}>ส่งฟอร์มสำเร็จ!</div>
+        <div style={{fontSize:12,color:'#6b7280',marginTop:6,marginBottom:20}}>เอกสารของคุณถูกบันทึกแล้ว ตรวจสอบได้ที่ "เอกสารตอบกลับ"</div>
+        <button onClick={onClose} className="nbg" style={{padding:'9px 28px',fontSize:13}}>ปิด</button>
+      </div>
+    </div>
+  );
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9600}}>
+      <div className="mc" style={{width:400,padding:28}} onClick={e=>e.stopPropagation()} onMouseDown={e=>e.stopPropagation()}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:18}}>
+          <span style={{fontSize:15,fontWeight:700,color:'#1a4d24'}}>กรอกข้อมูลก่อนส่ง</span>
+          <button onClick={onClose} className="nb" style={{padding:'6px'}}><I n="close" s={18}/></button>
+        </div>
+        <div style={{marginBottom:12}}>
+          <SL c="ชื่อ-นามสกุล *"/>
+          <NI value={name} onChange={setName} placeholder="ชื่อ นามสกุล"/>
+        </div>
+        <div style={{marginBottom:12}}>
+          <SL c="ตำแหน่งที่สมัคร *"/>
+          <NI value={position} onChange={setPosition} placeholder="เช่น Software Developer"/>
+        </div>
+        <div style={{display:'flex',gap:10,marginBottom:20}}>
+          <div style={{flex:1}}>
+            <SL c="เงินเดือนที่ต้องการ"/>
+            <NI value={salary} onChange={setSalary} placeholder="45,000"/>
+          </div>
+          <div style={{flex:1}}>
+            <SL c="เบอร์โทรศัพท์"/>
+            <NI value={tel} onChange={setTel} placeholder="08X-XXX-XXXX"/>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+          <button onClick={onClose} className="nb" style={{padding:'9px 18px',fontSize:13}}>ยกเลิก</button>
+          <button onClick={submit} className="nbg" style={{padding:'9px 24px',fontSize:13,opacity:(!name||!position)?0.5:1}}
+            disabled={!name||!position}>
+            <I n="send" s={15}/> ส่งใบสมัคร
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── FormsListView ── */
+function FormsListView({forms,setForms,setView,setActiveFormId,responses,onNewForm,goPreview}){
+  const [search,setSearch]=useState('');
+  const [deleteConfirmId,setDeleteConfirmId]=useState(null);
+  const [shareForm,setShareForm]=useState(null);
+  const filtered=forms.filter(f=>f.title.toLowerCase().includes(search.toLowerCase()));
+  const deleteForm=id=>{setForms(prev=>prev.filter(f=>f.id!==id));setDeleteConfirmId(null);};
+  const dupForm=id=>{
+    const src=forms.find(f=>f.id===id);
+    if(!src)return;
+    const nf={...JSON.parse(JSON.stringify(src)),id:'f'+Date.now(),title:src.title+' (สำเนา)',
+      createdAt:new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'}),
+      updatedAt:new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})};
+    setForms(prev=>[...prev,nf]);
+  };
+  return(
+    <div style={{flex:1,padding:24,overflowY:'auto'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',marginBottom:20}}>
+        <div>
+          <h1 style={{fontSize:22,fontWeight:700,color:'#1a4d24'}}>ฟอร์มทั้งหมด</h1>
+          <p style={{fontSize:13,color:'#6b7280',marginTop:3}}>{forms.length} ฟอร์ม</p>
+        </div>
+        <button onClick={onNewForm} className="nbg" style={{padding:'10px 20px',fontSize:13,display:'flex',alignItems:'center',gap:6}}>
+          <I n="add" s={18}/>สร้างฟอร์มใหม่
+        </button>
+      </div>
+      <div className="neu-in-sm" style={{padding:'8px 14px',marginBottom:16,display:'flex',alignItems:'center',gap:8}}>
+        <I n="search" s={18} c="" style={{color:'#9ca3af'}}/>
+        <input style={{border:'none',background:'transparent',outline:'none',flex:1,fontSize:13,fontFamily:"'Sarabun',sans-serif"}}
+          placeholder="ค้นหาฟอร์ม..." value={search} onChange={e=>setSearch(e.target.value)}/>
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
+        {filtered.map(f=>{
+          const cnt=responses.filter(r=>r.formId===f.id).length;
+          const newCnt=responses.filter(r=>r.formId===f.id&&r.status==='new').length;
+          return(
+            <div key={f.id} className="neu-sm" style={{padding:0,overflow:'hidden',cursor:'pointer'}}
+              onClick={()=>{setActiveFormId(f.id);setView('edit_form');}}>
+              <div style={{height:6,background:'linear-gradient(90deg,#1a4d24,#48b356)'}}/>
+              <div style={{padding:'16px 18px 12px'}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:8}}>
+                  <div style={{flex:1,marginRight:8}}>
+                    <div style={{fontSize:14,fontWeight:700,color:'#1a4d24',marginBottom:3}}>{f.title}</div>
+                    <div style={{fontSize:11,color:'#9ca3af'}}>{f.desc}</div>
+                  </div>
+                  <div style={{width:32,height:32,borderRadius:8,background:'rgba(45,122,58,.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                    <I n="description" s={18} c="" style={{color:'#2d7a3a'}}/>
+                  </div>
+                </div>
+                <div className="stat-bar">
+                  <div className="stat-col">
+                    <div style={{fontSize:18,fontWeight:700,color:'#1a4d24'}}>{cnt}</div>
+                    <div style={{fontSize:10,color:'#9ca3af'}}>ตอบกลับ</div>
+                  </div>
+                  <div className="stat-col">
+                    <div style={{fontSize:18,fontWeight:700,color:'#3b82f6'}}>{newCnt}</div>
+                    <div style={{fontSize:10,color:'#9ca3af'}}>ใหม่</div>
+                  </div>
+                  <div className="stat-col">
+                    <div style={{fontSize:18,fontWeight:700,color:'#6b7280'}}>{f.blocks?.length||0}</div>
+                    <div style={{fontSize:10,color:'#9ca3af'}}>บล็อก</div>
+                  </div>
+                </div>
+              </div>
+              <div style={{padding:'6px 18px',background:'rgba(0,0,0,.02)',borderTop:'1px solid #f0f0f0',display:'flex',gap:12,flexWrap:'wrap',alignItems:'center'}}>
+                <span style={{fontSize:10,color:'#9ca3af',display:'flex',alignItems:'center',gap:2}}><I n="edit" s={11}/>แก้ไขเมื่อ {f.updatedAt}</span>
+                <span style={{fontSize:10,color:'#9ca3af',display:'flex',alignItems:'center',gap:2}}><I n="share" s={11}/>ใช้ไป {f.shareCount||0} ครั้ง</span>
+                {f.lastSharedAt&&<span style={{fontSize:10,color:'#9ca3af',display:'flex',alignItems:'center',gap:2}}><I n="schedule" s={11}/>ล่าสุด {f.lastSharedAt}</span>}
+              </div>
+              <div style={{padding:'10px 18px',borderTop:'1px solid #f0f0f0',display:'flex',gap:6,justifyContent:'flex-end'}} onClick={e=>e.stopPropagation()}>
+                <button onClick={()=>setShareForm(f)} className="nb" style={{padding:'5px 10px',fontSize:11,display:'flex',alignItems:'center',gap:3}}>
+                  <I n="share" s={13}/>แชร์
+                </button>
+                <button onClick={()=>{setActiveFormId(f.id);goPreview?goPreview(f.id):setView('preview');}} className="nb" style={{padding:'5px 10px',fontSize:11,display:'flex',alignItems:'center',gap:3}}>
+                  <I n="visibility" s={13}/>ดูตัวอย่าง
+                </button>
+                <button onClick={()=>dupForm(f.id)} className="nb" style={{padding:'5px 10px',fontSize:11,display:'flex',alignItems:'center',gap:3}}>
+                  <I n="content_copy" s={13}/>ทำสำเนา
+                </button>
+                <button onClick={()=>setDeleteConfirmId(f.id)} className="nbd" style={{padding:'5px 10px',fontSize:11,display:'flex',alignItems:'center',gap:3}}>
+                  <I n="delete" s={13}/>ลบ
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {deleteConfirmId&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.4)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9500}}>
+          <div className="mc-sm" style={{width:360,padding:26}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:14}}>
+              <I n="warning" s={24} c="" style={{color:'#dc2626'}}/>
+              <span style={{fontSize:15,fontWeight:700,color:'#1f2937'}}>ยืนยันการลบฟอร์ม</span>
+            </div>
+            <p style={{fontSize:13,color:'#6b7280',marginBottom:20,lineHeight:1.6}}>
+              คุณต้องการลบ <b style={{color:'#1f2937'}}>"{forms.find(f=>f.id===deleteConfirmId)?.title}"</b> ใช่หรือไม่?<br/>
+              การดำเนินการนี้ไม่สามารถย้อนกลับได้
+            </p>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirmId(null)} className="nb" style={{padding:'8px 18px',fontSize:13}}>ยกเลิก</button>
+              <button onClick={()=>deleteForm(deleteConfirmId)} className="nbd" style={{padding:'8px 18px',fontSize:13,display:'flex',alignItems:'center',gap:4}}>
+                <I n="delete" s={15}/>ลบฟอร์ม
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {shareForm&&<ShareModal form={shareForm} onClose={()=>setShareForm(null)}
+        onConfirmShare={()=>{
+          const now=new Date();
+          const ts=now.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+          setForms(prev=>prev.map(f=>f.id===shareForm.id?{...f,shareCount:(f.shareCount||0)+1,lastSharedAt:ts}:f));
+        }}/>}
+    </div>
+  );
+}
+
+/* ── BuilderView ── */
+function BuilderView({form,onSave,setView,onPreview}){
+  const [blocks,setBlocks]=useState(form?.blocks||JSON.parse(JSON.stringify(DEF_BLOCKS)));
+  const [selectedId,setSelectedId]=useState(null);
+  const [dragOver,setDragOver]=useState(null);
+  const [logo,setLogo]=useState(form?.logo||{dataUrl:'',position:'left',inline:true});
+  const [desc,setDesc]=useState(form?.desc||'');
+  const dragRef=useRef(null);
+  const selected=blocks.find(b=>b.id===selectedId);
+
+  const addBlock=type=>{
+    const bt=BT.find(b=>b.type===type);
+    const base={id:'b'+Date.now(),type,colSpan:'full',label:bt?.label||type};
+    if(type==='radio'||type==='checkbox')base.options=['ตัวเลือก 1','ตัวเลือก 2'];
+    if(type==='radio')base.layout='vertical';
+    if(type==='table')Object.assign(base,{columns:['คอลัมน์ 1','คอลัมน์ 2'],rows:['',''],canAddRows:true});
+    if(type==='matrix')Object.assign(base,{rows:['แถว 1'],groups:[{label:'กลุ่ม 1',levels:['ดี','ปานกลาง','พอใช้']}]});
+    if(type==='photo')Object.assign(base,{accept:'image/*',maxSizeMB:2});
+    if(type==='pagebreak'){base.colSpan='full';}
+    if(type==='textarea')Object.assign(base,{rows:4,maxLength:500});
+    setBlocks(prev=>[...prev,base]);
+    setSelectedId(base.id);
+  };
+
+  const updBlock=(id,nb)=>setBlocks(prev=>prev.map(b=>b.id===id?nb:b));
+  const delBlock=id=>{setBlocks(prev=>prev.filter(b=>b.id!==id));setSelectedId(null);};
+  const moveUp=id=>{const i=blocks.findIndex(b=>b.id===id);if(i>0){const a=[...blocks];[a[i-1],a[i]]=[a[i],a[i-1]];setBlocks(a);}};
+  const moveDown=id=>{const i=blocks.findIndex(b=>b.id===id);if(i<blocks.length-1){const a=[...blocks];[a[i],a[i+1]]=[a[i+1],a[i]];setBlocks(a);}};
+
+  const save=()=>{
+    onSave({...form,blocks,logo,desc,updatedAt:new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})});
+    alert('บันทึกฟอร์มแล้ว!');
+  };
+
+  const spanClass=s=>s==='half'?'bhalf':s==='third'?'bthird':'bfull';
+
+  /* header with logo */
+  const logoPos=logo?.position||'left';
+  const titleAlign=logo?.titleAlign||'left';
+  const justifyLogo=logoPos==='center'?'center':logoPos==='right'?'flex-end':'flex-start';
+  const renderHeader=()=>(
+    <div style={{marginBottom:16,padding:'14px 18px',background:'white',borderRadius:10,boxShadow:'0 1px 4px rgba(0,0,0,.06)'}}>
+      {logo?.dataUrl&&logo?.inline?(
+        <div style={{display:'flex',alignItems:'center',gap:14,justifyContent:justifyLogo,marginBottom:6}}>
+          <img src={logo.dataUrl} alt="logo" style={{height:46,objectFit:'contain',flexShrink:0}}/>
+          <div style={{textAlign:titleAlign}}>
+            <div style={{fontSize:17,fontWeight:700,color:'#1a4d24'}}>{form?.title}</div>
+            {desc&&<div style={{fontSize:12,color:'#6b7280',marginTop:2}}>{desc}</div>}
+          </div>
+        </div>
+      ):(
+        <>
+          {logo?.dataUrl&&<div style={{display:'flex',justifyContent:justifyLogo,marginBottom:6}}><img src={logo.dataUrl} alt="logo" style={{height:46,objectFit:'contain'}}/></div>}
+          <div style={{textAlign:titleAlign}}>
+            <div style={{fontSize:17,fontWeight:700,color:'#1a4d24'}}>{form?.title}</div>
+            {desc&&<div style={{fontSize:12,color:'#6b7280',marginTop:2}}>{desc}</div>}
+          </div>
+        </>
+      )}
+    </div>
+  );
+
+  return(
+    <div style={{flex:1,display:'flex',overflow:'hidden'}}>
+      {/* Left palette */}
+      <div className="no-print" style={{width:200,padding:'16px 10px',overflowY:'auto',borderRight:'1px solid #e5e7eb',background:'#fafafa',flexShrink:0}}>
+        <div style={{fontSize:10,fontWeight:700,color:'#9ca3af',textTransform:'uppercase',letterSpacing:'.06em',marginBottom:8,paddingLeft:4}}>เพิ่มบล็อก</div>
+        {BT.map(bt=>(
+          <button key={bt.type} onClick={()=>addBlock(bt.type)} className="nb"
+            style={{width:'100%',display:'flex',alignItems:'center',gap:8,padding:'8px 10px',marginBottom:5,textAlign:'left'}}>
+            <I n={bt.icon} s={16}/>
+            <div>
+              <div style={{fontSize:11,fontWeight:600,color:'#374151'}}>{bt.label}</div>
+              <div style={{fontSize:9,color:'#9ca3af'}}>{bt.desc}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+      {/* Canvas */}
+      <div style={{flex:1,padding:'20px',overflowY:'auto'}} onClick={()=>setSelectedId(null)}>
+        <div style={{maxWidth:740,margin:'0 auto'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:14}}>
+            <div>
+              <h2 style={{fontSize:16,fontWeight:700,color:'#1a4d24'}}>{form?.title}</h2>
+              <span style={{fontSize:11,color:'#9ca3af'}}>{blocks.length} บล็อก</span>
+            </div>
+            <div style={{display:'flex',gap:8}}>
+              <button onClick={()=>onPreview&&onPreview()} className="nb" style={{padding:'8px 14px',fontSize:12,display:'flex',alignItems:'center',gap:5}}>
+                <I n="visibility" s={16}/>Preview
+              </button>
+              <button onClick={save} className="nbg" style={{padding:'8px 18px',fontSize:12,display:'flex',alignItems:'center',gap:5}}>
+                <I n="save" s={16}/>บันทึก
+              </button>
+            </div>
+          </div>
+          {renderHeader()}
+          <div style={{display:'flex',flexWrap:'wrap',gap:12}}>
+            {blocks.map((b,idx)=>{
+              const isSel=b.id===selectedId;
+              const bAlign=b.blockAlign||'start';
+              const bStyle={cursor:'pointer',outline:isSel?'2px solid #2d7a3a':dragOver===idx?'2px dashed #48b356':'2px solid transparent',
+                borderRadius:12,background:'white',padding:'12px 14px',boxShadow:'0 1px 4px rgba(0,0,0,.05)',transition:'outline .1s',position:'relative',
+                marginLeft:bAlign==='center'||bAlign==='end'?'auto':0,
+                marginRight:bAlign==='center'?'auto':0};
+              return(
+                <React.Fragment key={b.id}>
+                  {b.breakRow&&<div style={{flexBasis:'100%',height:0}}/>}
+                  <div className={spanClass(b.colSpan)}
+                    draggable
+                    onDragStart={()=>dragRef.current=idx}
+                    onDragOver={e=>{e.preventDefault();setDragOver(idx);}}
+                    onDrop={()=>{
+                      if(dragRef.current===null||dragRef.current===idx)return;
+                      const a=[...blocks];
+                      const[removed]=a.splice(dragRef.current,1);
+                      a.splice(idx,0,removed);
+                      setBlocks(a);dragRef.current=null;setDragOver(null);
+                    }}
+                    onDragEnd={()=>setDragOver(null)}
+                    onClick={e=>{e.stopPropagation();setSelectedId(b.id);}}
+                    style={bStyle}>
+                    {isSel&&(
+                      <div style={{position:'absolute',top:6,right:6,display:'flex',gap:3}}>
+                        <button onClick={e=>{e.stopPropagation();moveUp(b.id);}} className="nb" style={{padding:'2px 4px'}}><I n="arrow_upward" s={12}/></button>
+                        <button onClick={e=>{e.stopPropagation();moveDown(b.id);}} className="nb" style={{padding:'2px 4px'}}><I n="arrow_downward" s={12}/></button>
+                      </div>
+                    )}
+                    <BlockRender block={b} preview={false}/>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      {/* Right settings panel */}
+      <div className="no-print" style={{width:240,padding:'16px 12px',overflowY:'auto',borderLeft:'1px solid #e5e7eb',background:'#fafafa',flexShrink:0}}>
+        {selected?(
+          <BlockSettings block={selected} onChange={nb=>updBlock(selected.id,nb)} onDelete={()=>delBlock(selected.id)}/>
+        ):(
+          <FormSettings logo={logo} desc={desc} onLogoChange={setLogo} onDescChange={setDesc}/>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── PreviewView ── */
+function PreviewView({form,onBack,onSubmit}){
+  const [showSubmit,setShowSubmit]=useState(false);
+  const blocks=form?.blocks||[];
+  const logo=form?.logo||{};
+  const desc=form?.desc||'';
+  const logoPos=logo?.position||'left';
+  const titleAlign=logo?.titleAlign||'left';
+  const justifyLogo=logoPos==='center'?'center':logoPos==='right'?'flex-end':'flex-start';
+  const spanClass=s=>s==='half'?'bhalf':s==='third'?'bthird':'bfull';
+  return(
+    <div style={{flex:1,padding:'24px',overflowY:'auto',background:'#f5f5f5'}}>
+      <div style={{maxWidth:760,margin:'0 auto'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <button onClick={onBack} className="nb" style={{padding:'7px 14px',fontSize:12,display:'flex',alignItems:'center',gap:5}}>
+            <I n="arrow_back" s={16}/>กลับ
+          </button>
+          <div style={{display:'flex',gap:8,alignItems:'center'}}>
+            <span style={{fontSize:12,color:'#9ca3af'}}>ตัวอย่างฟอร์ม — {form?.title}</span>
+            <button onClick={()=>{
+              const w=window.open('','_blank');
+              if(!w)return;
+              w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${form?.title||'ฟอร์ม'}</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Sarabun',sans-serif;background:white;padding:24px 32px;}h1{font-size:18px;font-weight:700;color:#1a4d24;}label{font-size:12px;font-weight:600;color:#4b5563;display:block;margin-bottom:4px;}input,textarea,select{font-family:'Sarabun',sans-serif;width:100%;border:1px solid #d1d5db;border-radius:6px;padding:7px 10px;font-size:13px;background:white;}table{width:100%;border-collapse:collapse;font-size:12px;}th{background:#f3f4f6;border:1px solid #d1d5db;padding:6px 8px;font-weight:600;}td{border:1px solid #d1d5db;padding:5px 8px;}.block{margin-bottom:14px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:8px;}.section{border-left:4px solid #2d7a3a;padding:4px 0 4px 10px;margin:8px 0;border:none;}.row{display:flex;flex-wrap:wrap;gap:12px;}.full{flex:0 0 100%;}.half{flex:0 0 calc(50% - 6px);}.third{flex:0 0 calc(33.333% - 8px);}@media print{@page{size:A4;margin:15mm;}body{padding:0;}.no-print{display:none;}}</style></head><body>
+<div style="margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid rgba(45,122,58,.2);">${form?.logo?.dataUrl&&form?.logo?.inline?`<div style="display:flex;align-items:center;gap:14px;justify-content:${justifyLogo};"><img src="${form.logo.dataUrl}" style="height:50px;object-fit:contain;"/><div style="text-align:${titleAlign};"><h1>${form?.title||''}</h1><p style="font-size:12px;color:#6b7280;margin-top:3px;">${form?.desc||''}</p></div></div>`:form?.logo?.dataUrl?`<div style="display:flex;justify-content:${justifyLogo};margin-bottom:8px;"><img src="${form.logo.dataUrl}" style="height:50px;object-fit:contain;"/></div><div style="text-align:${titleAlign};"><h1>${form?.title||''}</h1><p style="font-size:12px;color:#6b7280;margin-top:3px;">${form?.desc||''}</p></div>`:`<div style="text-align:${titleAlign};"><h1>${form?.title||''}</h1><p style="font-size:12px;color:#6b7280;margin-top:3px;">${form?.desc||''}</p></div>`}</div>
+<div class="row">${(form?.blocks||[]).map(b=>{
+  if(b.type==='pagebreak') return `<div style="flex:0 0 100%;border-top:2px dashed #d1d5db;margin:8px 0;page-break-after:always;"></div>`;
+  const cls=b.colSpan==='half'?'half':b.colSpan==='third'?'third':'full';
+  const brk=b.breakRow?'<div style="flex:0 0 100%;height:0;"></div>':'';
+  const ml=b.blockAlign==='end'||b.blockAlign==='center'?'margin-left:auto;':'';
+  const mr=b.blockAlign==='center'?'margin-right:auto;':'';
+  if(b.type==='section') return `${brk}<div class="${cls} section" style="${ml}${mr}"><strong style="font-size:13px;color:#1a4d24;">${b.label||''}</strong></div>`;
+  if(b.type==='table') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><table><thead><tr>${(b.columns||[]).map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${(b.rows||[]).map(r=>`<tr>${(b.columns||[]).map(()=>'<td>&nbsp;</td>').join('')}</tr>`).join('')}</tbody></table></div>`;
+  if(b.type==='matrix') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><table><thead><tr><th></th>${(b.groups||[]).map(g=>`<th colspan="${g.levels.length}">${g.label}</th>`).join('')}</tr><tr><th></th>${(b.groups||[]).flatMap(g=>g.levels.map(lv=>`<th>${lv}</th>`)).join('')}</tr></thead><tbody>${(b.rows||[]).map(r=>`<tr><td>${r}</td>${(b.groups||[]).flatMap(g=>g.levels.map(()=>`<td style="text-align:center;"><input type="radio" style="width:auto;border:none;padding:0;"/></td>`)).join('')}</tr>`).join('')}</tbody></table></div>`;
+  if(b.type==='photo') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><div style="border:1px dashed #d1d5db;border-radius:6px;padding:18px;text-align:center;color:#9ca3af;font-size:12px;">เลือกไฟล์ / อัปโหลด</div></div>`;
+  if(b.type==='textarea') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><textarea rows="${b.rows||4}" placeholder="${b.placeholder||''}"></textarea></div>`;
+  if(b.type==='radio') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><div style="display:flex;flex-direction:${b.layout==='horizontal'?'row':'column'};gap:8px;flex-wrap:wrap;">${(b.options||[]).map(o=>`<label style="display:flex;align-items:center;gap:6px;font-weight:400;"><input type="radio" style="width:auto;border:none;padding:0;"/> ${o}</label>`).join('')}</div></div>`;
+  if(b.type==='checkbox') return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><div style="display:flex;flex-direction:column;gap:6px;">${(b.options||[]).map(o=>`<label style="display:flex;align-items:center;gap:6px;font-weight:400;"><input type="checkbox" style="width:auto;border:none;padding:0;"/> ${o}</label>`).join('')}</div></div>`;
+  return `${brk}<div class="${cls} block" style="${ml}${mr}"><label>${b.label||''}</label><input type="${b.inputType||b.type}" placeholder="${b.placeholder||''}"/>${b.unit?`<span style="font-size:11px;color:#9ca3af;"> ${b.unit}</span>`:''}</div>`;
+}).join('')}</div>
+<script>window.onload=()=>window.print();<\/script></body></html>`);w.document.close();}} className="nb" style={{padding:'7px 14px',fontSize:12,display:'flex',alignItems:'center',gap:5}}>
+              <I n="print" s={16}/>พิมพ์ฟอร์ม PDF
+            </button>
+          </div>
+        </div>
+        <div className="neu" style={{padding:'28px 32px'}}>
+          {/* Form header */}
+          <div style={{marginBottom:22,paddingBottom:16,borderBottom:'2px solid rgba(45,122,58,.12)'}}>
+            {logo?.dataUrl&&logo?.inline?(
+              <div style={{display:'flex',alignItems:'center',gap:14,justifyContent:justifyLogo,marginBottom:4}}>
+                <img src={logo.dataUrl} alt="logo" style={{height:52,objectFit:'contain',flexShrink:0}}/>
+                <div style={{textAlign:titleAlign}}>
+                  <div style={{fontSize:20,fontWeight:700,color:'#1a4d24'}}>{form?.title}</div>
+                  {desc&&<div style={{fontSize:13,color:'#6b7280',marginTop:2}}>{desc}</div>}
+                </div>
+              </div>
+            ):(
+              <>
+                {logo?.dataUrl&&<div style={{display:'flex',justifyContent:justifyLogo,marginBottom:8}}><img src={logo.dataUrl} alt="logo" style={{height:52,objectFit:'contain'}}/></div>}
+                <div style={{textAlign:titleAlign}}>
+                  <div style={{fontSize:20,fontWeight:700,color:'#1a4d24'}}>{form?.title}</div>
+                  {desc&&<div style={{fontSize:13,color:'#6b7280',marginTop:4}}>{desc}</div>}
+                </div>
+              </>
+            )}
+          </div>
+          {/* Blocks */}
+          <div style={{display:'flex',flexWrap:'wrap',gap:14}}>
+            {blocks.map(b=>{
+              const bAlign=b.blockAlign||'start';
+              const isSection=b.type==='section';
+              const isPageBreak=b.type==='pagebreak';
+              return(
+                <React.Fragment key={b.id}>
+                  {b.breakRow&&<div style={{flexBasis:'100%',height:0}}/>}
+                  <div className={spanClass(b.colSpan)} style={{
+                    padding:isSection||isPageBreak?'4px 0':'10px 14px',
+                    background:isSection||isPageBreak?'transparent':'white',
+                    borderRadius:isSection||isPageBreak?0:10,
+                    boxShadow:isSection||isPageBreak?'none':'0 1px 4px rgba(0,0,0,.05)',
+                    marginLeft:bAlign==='center'||bAlign==='end'?'auto':0,
+                    marginRight:bAlign==='center'?'auto':0}}>
+                    <BlockRender block={b} preview={true}/>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+          {/* Submit */}
+          <div style={{marginTop:28,display:'flex',justifyContent:'center'}}>
+            <button className="nbg" style={{padding:'12px 40px',fontSize:15}} onClick={()=>setShowSubmit(true)}>
+              <I n="send" s={18}/> ส่งใบสมัคร
+            </button>
+          </div>
+        </div>
+      </div>
+      {showSubmit&&<SubmitFormModal form={form} onClose={()=>setShowSubmit(false)} onSubmit={d=>{onSubmit&&onSubmit(d);setShowSubmit(false);}}/>}
+    </div>
+  );
+}
+
+/* ── ResponsesView ── */
+const RESP_PER_PAGE=50;
+function ResponsesView({forms,responses,setResponses,onViewResp}){
+  const [search,setSearch]=useState('');
+  const [filterStatus,setFilterStatus]=useState('all');
+  const [formFilter,setFormFilter]=useState('all');
+  const [page,setPage]=useState(0);
+  const statusMap={new:{l:'ใหม่',c:'#2563eb',bg:'rgba(37,99,235,.1)'},reviewed:{l:'ตรวจสอบแล้ว',c:'#d97706',bg:'rgba(217,119,6,.1)'},shortlisted:{l:'คัดเลือก',c:'#2d7a3a',bg:'rgba(45,122,58,.1)'},rejected:{l:'ไม่ผ่าน',c:'#dc2626',bg:'rgba(220,38,38,.1)'}};
+  const base=responses.filter(r=>formFilter==='all'||r.formId===formFilter);
+  const myResps=base.filter(r=>r.name.includes(search)||r.position.includes(search));
+  const filtered=myResps.filter(r=>filterStatus==='all'||(filterStatus==='starred'?r.starred:r.status===filterStatus));
+  const totalPages=Math.max(1,Math.ceil(filtered.length/RESP_PER_PAGE));
+  const safePage=Math.min(page,totalPages-1);
+  const pageItems=filtered.slice(safePage*RESP_PER_PAGE,(safePage+1)*RESP_PER_PAGE);
+  const total=myResps.length;
+  const nw=myResps.filter(r=>r.status==='new').length;
+  const rev=myResps.filter(r=>r.status==='reviewed'||r.status==='shortlisted').length;
+  const remaining=total-rev;
+  useEffect(()=>setPage(0),[search,filterStatus,formFilter]);
+
+  const [deleteConfirmId,setDeleteConfirmId]=useState(null);
+  const [statusConfirm,setStatusConfirm]=useState(null); // {id, next}
+  const changeStatus=(id,ns)=>{
+    setResponses(prev=>prev.map(r=>{
+      if(r.id!==id)return r;
+      return {...r,status:ns,approvedAt:ns==='shortlisted'?new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})+', '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):r.approvedAt};
+    }));
+    setStatusConfirm(null);
+  };
+  const toggleStar=(id)=>setResponses(prev=>prev.map(r=>r.id===id?{...r,starred:!r.starred}:r));
+  const deleteResp=(id)=>{setResponses(prev=>prev.filter(r=>r.id!==id));setDeleteConfirmId(null);};
+
+  const exportCSV=()=>{
+    const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+    const row=a=>a.map(esc).join(',')+'\n';
+    let csv='\uFEFF';
+    csv+='[ฟอร์มทั้งหมด / Forms]\n';
+    csv+=row(['Form ID','ชื่อฟอร์ม','คำอธิบาย','สถานะ','จำนวน Blocks','จำนวนตอบกลับ','วันที่สร้าง','วันที่อัปเดต']);
+    (forms||[]).forEach(f=>{ csv+=row([f.id,f.title,f.desc||'',f.active!==false?'เปิดใช้งาน':'ปิดใช้งาน',f.blocks.length,responses.filter(r=>r.formId===f.id).length,f.createdAt,f.updatedAt]); });
+    csv+='\n[เอกสารตอบกลับ / Responses]\n';
+    csv+=row(['Response ID','Form ID','ชื่อฟอร์ม','ชื่อผู้สมัคร','ตำแหน่งที่สมัคร','เงินเดือน (บาท)','เบอร์โทรศัพท์','สถานะ','ติดดาว','Timestamp ที่ส่ง (Submitted At)','Timestamp ที่ Approved']);
+    responses.forEach(r=>{ const f=(forms||[]).find(f=>f.id===r.formId); csv+=row([r.id,r.formId,f?.title||'',r.name,r.position,r.salary||'',r.tel||'',r.status,r.starred?'Yes':'No',r.submittedAt||r.at,r.approvedAt||'']); });
+    csv+=`\n[Generated],"${new Date().toLocaleString('th-TH')}"\n`;
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='hr_formkit_'+new Date().toISOString().slice(0,10)+'.csv';
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},300);
+  };
+
+  return(
+    <div style={{padding:28,overflowY:'auto',flex:1}}>
+      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:20,flexWrap:'wrap',gap:10}}>
+        <div>
+          <h1 style={{fontSize:22,fontWeight:700,color:'#1a2e1a'}}>เอกสารตอบกลับ <span style={{fontSize:13,fontWeight:400,color:'#9ca3af'}}>(Responding Documents)</span></h1>
+          <p style={{fontSize:13,color:'#9ca3af',marginTop:3}}>{formFilter==='all'?'ทุกฟอร์ม':(forms||[]).find(f=>f.id===formFilter)?.title||''} — {total} รายการ</p>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <button onClick={exportCSV} className="nb" style={{padding:'8px 14px',fontSize:12,display:'flex',alignItems:'center',gap:6,color:'#374151'}}><I n="download" s={16}/>Export Excel (.csv)</button>
+        </div>
+      </div>
+      {/* Flat stat bar */}
+      <div className="neu" style={{marginBottom:20,overflow:'hidden'}}>
+        <div style={{padding:'12px 20px',borderBottom:'1px solid #f0f0f0',display:'flex',alignItems:'center',gap:6}}>
+          <I n="bar_chart" s={18} c="text-green-700"/><span style={{fontWeight:600,fontSize:13,color:'#374151'}}>สรุปเอกสารตอบกลับ</span>
+        </div>
+        <div className="stat-bar">
+          {[
+            {label:'ทั้งหมด',  value:total,    icon:'inbox',          color:'#374151'},
+            {label:'ใหม่',     value:nw,       icon:'fiber_new',      color:'#2563eb'},
+            {label:'ตรวจสอบแล้ว',value:rev,   icon:'task_alt',       color:'#2d7a3a'},
+            {label:'คงเหลือ', value:remaining, icon:'pending_actions', color:'#d97706'},
+          ].map((s,i)=>(
+            <div key={i} className="stat-col">
+              <I n={s.icon} s={20} c="" style={{color:s.color}}/>
+              <div style={{fontSize:24,fontWeight:700,color:s.color,marginTop:4,lineHeight:1}}>{s.value}</div>
+              <div style={{fontSize:11,color:'#9ca3af',marginTop:3}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Filters */}
+      <div className="neu-sm" style={{padding:'12px 16px',marginBottom:14,display:'flex',gap:10,flexWrap:'wrap',alignItems:'center'}}>
+        <div className="neu-in-sm" style={{display:'flex',alignItems:'center',gap:6,padding:'6px 12px',flex:1,minWidth:160}}>
+          <I n="search" s={16} c="" style={{color:'#9ca3af'}}/>
+          <input style={{border:'none',background:'transparent',outline:'none',flex:1,fontSize:12,fontFamily:"'Sarabun',sans-serif"}}
+            placeholder="ค้นหา..." value={search} onChange={e=>setSearch(e.target.value)}/>
+        </div>
+        <div className="neu-in-sm" style={{display:'flex',alignItems:'center',gap:6,padding:'4px 10px'}}>
+          <I n="folder_open" s={15} c="" style={{color:'#9ca3af'}}/>
+          <select value={formFilter} onChange={e=>setFormFilter(e.target.value)}
+            style={{border:'none',background:'transparent',outline:'none',fontSize:12,fontFamily:"'Prompt',sans-serif",color:'#374151',cursor:'pointer',maxWidth:160}}>
+            <option value="all">ทุกฟอร์ม</option>
+            {(forms||[]).map(f=><option key={f.id} value={f.id}>{f.title}</option>)}
+          </select>
+        </div>
+        <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+          {['all',...Object.keys(statusMap),'starred'].map(s=>(
+            <Chip key={s}
+              label={s==='all'?'ทั้งหมด':s==='starred'?'ติดดาว':statusMap[s].l}
+              active={filterStatus===s}
+              onClick={()=>setFilterStatus(s)}/>
+          ))}
+        </div>
+      </div>
+      {/* Table */}
+      <div className="neu-sm" style={{overflow:'hidden'}}>
+        <div style={{padding:'10px 20px',borderBottom:'1px solid #f0f0f0',display:'grid',gridTemplateColumns:'220px 1fr 128px 80px 130px',gap:10,fontSize:10,fontWeight:700,color:'#9ca3af',textTransform:'uppercase',letterSpacing:'.06em',alignItems:'center'}}>
+          <span>ผู้ทำแบบฟอร์ม</span><span>ตำแหน่ง</span><span>สถานะ</span><span>เวลา</span><span>จัดการ</span>
+        </div>
+        {pageItems.length===0&&<div style={{padding:'28px',textAlign:'center',color:'#9ca3af',fontSize:13}}>ไม่พบข้อมูล</div>}
+        {pageItems.map(r=>{
+          const st=statusMap[r.status]||statusMap.new;
+          return(
+            <div key={r.id} className="resp-row" style={{gridTemplateColumns:'220px 1fr 128px 80px 130px',display:'grid',gap:10,alignItems:'center'}}
+              onClick={()=>onViewResp(r)}>
+              <div style={{display:'flex',alignItems:'center',gap:8,minWidth:0}}>
+                <span style={{fontSize:18,flexShrink:0}}>{r.avatar}</span>
+                <div style={{minWidth:0}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'#1f2937',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.name}</div>
+                  <div style={{fontSize:10,color:'#9ca3af'}}>{r.submittedAt||r.at}</div>
+                </div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',fontSize:12,color:'#4b5563',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.position}</div>
+              <div style={{display:'flex',alignItems:'center'}}>
+                <button onClick={e=>{e.stopPropagation();setStatusConfirm({id:r.id,next:r.status});}} className="bdg"
+                  style={{background:st.bg,color:st.c,border:'none',cursor:'pointer',fontFamily:"'Prompt',sans-serif",whiteSpace:'nowrap'}}>
+                  {st.l}
+                </button>
+              </div>
+              <div style={{display:'flex',alignItems:'center',fontSize:11,color:'#9ca3af',whiteSpace:'nowrap'}}>{r.at}</div>
+              <div style={{display:'flex',alignItems:'center',gap:3}} onClick={e=>e.stopPropagation()}>
+                <button onClick={()=>onViewResp(r)} className="nb" style={{padding:'4px 7px',display:'flex',alignItems:'center',gap:2,fontSize:11,whiteSpace:'nowrap',flexShrink:0}}>
+                  <I n="picture_as_pdf" s={13}/>PDF
+                </button>
+                <button onClick={()=>toggleStar(r.id)} className="nb" style={{padding:'4px 6px',flexShrink:0}}>
+                  <I n="star" s={14} c="" style={{color:r.starred?'#f59e0b':'#d1d5db'}}/>
+                </button>
+                <button onClick={()=>setDeleteConfirmId(r.id)} className="nb" style={{padding:'4px 6px',flexShrink:0}}>
+                  <I n="delete" s={14} c="" style={{color:'#ef4444'}}/>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {/* Pagination */}
+        {totalPages>1&&(
+          <div style={{padding:'10px 20px',borderTop:'1px solid #f0f0f0',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <span style={{fontSize:12,color:'#9ca3af'}}>หน้า {safePage+1} / {totalPages} ({filtered.length} รายการ)</span>
+            <div style={{display:'flex',gap:6}}>
+              <button onClick={()=>setPage(p=>Math.max(0,p-1))} disabled={safePage===0} className="nb"
+                style={{padding:'5px 12px',fontSize:12,opacity:safePage===0?.4:1,display:'flex',alignItems:'center',gap:4}}>
+                <I n="chevron_left" s={16}/>ก่อนหน้า
+              </button>
+              <button onClick={()=>setPage(p=>Math.min(totalPages-1,p+1))} disabled={safePage===totalPages-1} className="nb"
+                style={{padding:'5px 12px',fontSize:12,opacity:safePage===totalPages-1?.4:1,display:'flex',alignItems:'center',gap:4}}>
+                ถัดไป<I n="chevron_right" s={16}/>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* Delete confirmation modal */}
+      {deleteConfirmId&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9800}}>
+          <div className="mc-sm" style={{width:340,padding:24}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+              <I n="warning" s={22} c="" style={{color:'#dc2626'}}/>
+              <span style={{fontSize:14,fontWeight:700,color:'#1f2937'}}>ยืนยันการลบเอกสาร</span>
+            </div>
+            <p style={{fontSize:13,color:'#6b7280',marginBottom:18,lineHeight:1.6}}>
+              คุณต้องการลบเอกสารตอบกลับของ <b style={{color:'#1f2937'}}>"{responses.find(r=>r.id===deleteConfirmId)?.name}"</b> ใช่หรือไม่?<br/>
+              การดำเนินการนี้ไม่สามารถย้อนกลับได้
+            </p>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={()=>setDeleteConfirmId(null)} className="nb" style={{padding:'7px 16px',fontSize:12}}>ยกเลิก</button>
+              <button onClick={()=>deleteResp(deleteConfirmId)} className="nbd" style={{padding:'7px 16px',fontSize:12,display:'flex',alignItems:'center',gap:4}}>
+                <I n="delete" s={14}/>ลบเอกสาร
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Status change confirmation modal */}
+      {statusConfirm&&(
+        <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.45)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:9800}}>
+          <div className="mc-sm" style={{width:360,padding:24}} onClick={e=>e.stopPropagation()}>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+              <I n="swap_horiz" s={22} c="" style={{color:'#2d7a3a'}}/>
+              <span style={{fontSize:14,fontWeight:700,color:'#1f2937'}}>เปลี่ยนสถานะ</span>
+            </div>
+            <p style={{fontSize:12,color:'#6b7280',marginBottom:12,lineHeight:1.6}}>
+              เลือกสถานะใหม่สำหรับเอกสารของ <b style={{color:'#1f2937'}}>"{responses.find(r=>r.id===statusConfirm.id)?.name}"</b>
+            </p>
+            <div style={{marginBottom:18}}>
+              <SL c="สถานะใหม่"/>
+              <select className="ni" value={statusConfirm.next} onChange={e=>setStatusConfirm({...statusConfirm,next:e.target.value})}>
+                {Object.entries(statusMap).map(([k,v])=>(
+                  <option key={k} value={k}>{v.l}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{display:'flex',gap:8,justifyContent:'flex-end'}}>
+              <button onClick={()=>setStatusConfirm(null)} className="nb" style={{padding:'7px 16px',fontSize:12}}>ยกเลิก</button>
+              <button onClick={()=>changeStatus(statusConfirm.id,statusConfirm.next)} className="nbg" style={{padding:'7px 16px',fontSize:12,display:'flex',alignItems:'center',gap:4}}>
+                <I n="check" s={14}/>ยืนยัน
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── App ── */
+function App(){
+  const [view,setView]=useState('dashboard');
+  const [prevView,setPrevView]=useState('forms_list');
+  const [forms,setForms]=useState(INIT_FORMS);
+  const [responses,setResponses]=useState(SAMPLE_RESP);
+  const [activeFormId,setActiveFormId]=useState('f1');
+  const [showNewForm,setShowNewForm]=useState(false);
+  const [detailResp,setDetailResp]=useState(null);
+
+  const goPreview=(fromView)=>{setPrevView(fromView);setView('preview');};
+
+  const activeForm=forms.find(f=>f.id===activeFormId)||forms[0];
+
+  const saveForm=updated=>{
+    setForms(prev=>prev.map(f=>f.id===updated.id?updated:f));
+  };
+
+  const createForm=newForm=>{
+    setForms(prev=>[...prev,newForm]);
+    setActiveFormId(newForm.id);
+    setView('builder');
+  };
+
+  const onNewForm=()=>setShowNewForm(true);
+
+  const onViewResp=resp=>{
+    const form=forms.find(f=>f.id===resp.formId)||activeForm;
+    setDetailResp({resp,form});
+  };
+
+  const handleSubmit=data=>{
+    setResponses(prev=>[data,...prev]);
+  };
+
+  return(
+    <div style={{display:'flex',height:'100vh',overflow:'hidden'}}>
+      <Sidebar
+        view={view}
+        setView={setView}
+        forms={forms}
+        activeFormId={activeFormId}
+        setActiveFormId={setActiveFormId}
+        onNewForm={onNewForm}
+      />
+      <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minWidth:0}}>
+        {view==='dashboard'&&(
+          <DashboardView
+            forms={forms}
+            responses={responses}
+            setView={setView}
+            setActiveFormId={setActiveFormId}
+            onViewResp={onViewResp}
+            setResponses={setResponses}
+          />
+        )}
+        {view==='forms_list'&&(
+          <FormsListView
+            forms={forms}
+            setForms={setForms}
+            setView={setView}
+            setActiveFormId={setActiveFormId}
+            responses={responses}
+            onNewForm={onNewForm}
+            goPreview={(id)=>{setActiveFormId(id);goPreview('forms_list');}}
+          />
+        )}
+        {view==='builder'&&(
+          <BuilderView
+            key={activeFormId}
+            form={activeForm}
+            onSave={saveForm}
+            setView={setView}
+            onPreview={()=>goPreview('builder')}
+          />
+        )}
+        {view==='edit_form'&&(
+          <BuilderView
+            key={activeFormId}
+            form={activeForm}
+            onSave={saveForm}
+            setView={setView}
+            onPreview={()=>goPreview('edit_form')}
+          />
+        )}
+        {view==='preview'&&(
+          <PreviewView
+            form={activeForm}
+            onBack={()=>setView(prevView)}
+            onSubmit={handleSubmit}
+          />
+        )}
+        {view==='responses'&&(
+          <ResponsesView
+            forms={forms}
+            responses={responses}
+            setResponses={setResponses}
+            onViewResp={onViewResp}
+          />
+        )}
+      </div>
+      {showNewForm&&(
+        <NewFormDialog
+          onClose={()=>setShowNewForm(false)}
+          onCreate={createForm}
+        />
+      )}
+      {detailResp&&(
+        <ResponseDetailModal
+          resp={detailResp.resp}
+          form={detailResp.form}
+          onClose={()=>setDetailResp(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
