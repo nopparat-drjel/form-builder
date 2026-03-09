@@ -12,7 +12,7 @@ const STATUS_LABEL: Record<ResponseStatus, string> = {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function escapeCell(value: unknown): string {
-  if (value === null || value === undefined) return '""';
+  if (value === null || value === undefined) return "";
   const str = Array.isArray(value) ? value.join(", ") : String(value);
   // Wrap in double quotes and escape any internal double quotes
   return `"${str.replace(/"/g, '""')}"`;

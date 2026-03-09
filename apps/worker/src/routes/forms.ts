@@ -100,8 +100,8 @@ router.get("/:id", async (c) => {
   });
 });
 
-// PUT /api/forms/:id
-router.put("/:id", zValidator("json", updateFormSchema), async (c) => {
+// PATCH or PUT /api/forms/:id
+const updateHandler = async (c: any) => {
   const { tenantId } = c.get("jwtPayload");
   const formId = c.req.param("id");
   const body = c.req.valid("json");
@@ -115,26 +115,46 @@ router.put("/:id", zValidator("json", updateFormSchema), async (c) => {
   if (!existing) return c.json({ success: false, error: "Form not found" }, 404);
 
   const now = Date.now();
-  await execute(c.env.DB, `
-    UPDATE forms SET
-      title = COALESCE(?, title),
-      description = COALESCE(?, description),
-      blocks = COALESCE(?, blocks),
-      logo_url = COALESCE(?, logo_url),
-      updated_at = ?
-    WHERE id = ? AND tenant_id = ?
-  `, [
-    body.title ?? null,
-    body.description ?? null,
-    body.blocks ? JSON.stringify(body.blocks) : null,
-    body.logoUrl ?? null,
-    now,
-    formId,
-    tenantId,
-  ]);
+  const updates: string[] = [];
+  const params: unknown[] = [];
+
+  if (body.title !== undefined) {
+    updates.push("title = ?");
+    params.push(body.title);
+  }
+  if (body.description !== undefined) {
+    updates.push("description = ?");
+    params.push(body.description ?? null);
+  }
+  if (body.blocks !== undefined) {
+    updates.push("blocks = ?");
+    params.push(JSON.stringify(body.blocks));
+  }
+  if (body.logoUrl !== undefined) {
+    updates.push("logo_url = ?");
+    params.push(body.logoUrl ?? null);
+  }
+
+  if (updates.length === 0) {
+    return c.json({ success: false, error: "No fields to update" }, 400);
+  }
+
+  updates.push("updated_at = ?");
+  params.push(now);
+
+  params.push(formId, tenantId);
+
+  await execute(
+    c.env.DB,
+    `UPDATE forms SET ${updates.join(", ")} WHERE id = ? AND tenant_id = ?`,
+    params
+  );
 
   return c.json({ success: true, data: { id: formId, updatedAt: now } });
-});
+};
+
+router.patch("/:id", zValidator("json", updateFormSchema), updateHandler);
+router.put("/:id", zValidator("json", updateFormSchema), updateHandler);
 
 // DELETE /api/forms/:id
 router.delete("/:id", async (c) => {
