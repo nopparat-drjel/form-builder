@@ -30,6 +30,7 @@ app.use(
         "https://hr-form-staging.pages.dev",
         "https://hr-form.pages.dev",
         "https://hr-form-prod.pages.dev",
+        "https://hr-form-frontend.vercel.app",
       ];
       return allowed.includes(origin) ? origin : null;
     },
